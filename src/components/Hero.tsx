@@ -1,9 +1,32 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Search } from "lucide-react";
 
 export default function Hero() {
+    const [title, setTitle] = useState("قارن، اختار، واشتري بذكاء");
+    const [subtitle, setSubtitle] = useState("نقارن لك أفضل الهواتف الذكية واللابتوبات المتوفرة في العراق. اكتشف الأسعار الحقيقية، الميزات، واختر الأنسب لميزانيتك واحتياجاتك بخطوات بسيطة.");
+    const [ctaText, setCtaText] = useState("تصفح الأجهزة");
+    const [badgeTitle, setBadgeTitle] = useState("أفضل سعر");
+    const [badgeText, setBadgeText] = useState("-15% خصم");
+    const [badgeVisible, setBadgeVisible] = useState(true);
+
+    useEffect(() => {
+        fetch("/api/hero")
+            .then(res => res.json())
+            .then(data => {
+                if (data && !data.error) {
+                    if (data.title) setTitle(data.title);
+                    if (data.subtitle) setSubtitle(data.subtitle);
+                    if (data.cta_text) setCtaText(data.cta_text);
+                    if (data.badge_title !== undefined) setBadgeTitle(data.badge_title);
+                    if (data.badge_text !== undefined) setBadgeText(data.badge_text);
+                    if (data.badge_visible !== undefined) setBadgeVisible(data.badge_visible);
+                }
+            })
+            .catch(err => console.error("Failed to fetch hero content:", err));
+    }, []);
     return (
         <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
             {/* Background decorations */}
@@ -28,19 +51,22 @@ export default function Hero() {
                         </div>
 
                         <h1 className="text-5xl lg:text-7xl font-black text-slate-900 leading-[1.2] mb-6">
-                            قارن، اختار، <br />
-                            <span className="text-gradient">واشتري بذكاء</span>
+                            {title.split('واشتري').map((part, i, arr) => (
+                                <span key={i}>
+                                    {part}
+                                    {i === 0 && arr.length > 1 && <><br /><span className="text-gradient">واشتري</span></>}
+                                </span>
+                            ))}
                         </h1>
 
                         <p className="text-lg text-slate-600 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
-                            نقارن لك أفضل الهواتف الذكية واللابتوبات المتوفرة في العراق.
-                            اكتشف الأسعار الحقيقية، الميزات، واختر الأنسب لميزانيتك واحتياجاتك بخطوات بسيطة.
+                            {subtitle}
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                             <button className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-light to-brand-dark text-white font-bold text-lg shadow-lg shadow-brand-light/30 hover:shadow-brand-light/50 transition-all hover:-translate-y-1 flex items-center justify-center gap-2 group">
                                 <Search className="w-5 h-5" />
-                                <span>تصفح الأجهزة</span>
+                                <span>{ctaText}</span>
                             </button>
 
                             <button className="w-full sm:w-auto px-8 py-4 rounded-2xl glass-panel text-slate-800 font-bold text-lg hover:bg-white/80 transition-all flex items-center justify-center gap-2 group">
@@ -91,19 +117,25 @@ export default function Hero() {
                             </div>
 
                             {/* Floating badges around the mockup */}
-                            <motion.div
-                                className="absolute -right-6 top-20 glass-panel px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3"
-                                animate={{ y: [0, -10, 0] }}
-                                transition={{ duration: 4, repeat: Infinity, delay: 1 }}
-                            >
-                                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">
-                                    $
-                                </div>
-                                <div>
-                                    <div className="text-xs text-slate-500 font-bold">أفضل سعر</div>
-                                    <div className="font-black text-slate-800">-15% خصم</div>
-                                </div>
-                            </motion.div>
+                            <AnimatePresence>
+                                {badgeVisible && (
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
+                                        exit={{ opacity: 0, scale: 0.8 }}
+                                        transition={{ y: { duration: 4, repeat: Infinity, delay: 1 } }}
+                                        className="absolute -right-6 top-20 glass-panel px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 z-10"
+                                    >
+                                        <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold">
+                                            $
+                                        </div>
+                                        <div>
+                                            <div className="text-xs text-slate-500 font-bold">{badgeTitle}</div>
+                                            <div className="font-black text-slate-800">{badgeText}</div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
                         </motion.div>
                     </motion.div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
 import "./globals.css";
+import { CurrencyProvider } from "@/components/CurrencyContext";
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={`${cairo.variable} font-sans antialiased bg-slate-50 text-slate-900`}>
-        {children}
+        <CurrencyProvider>
+          {children}
+        </CurrencyProvider>
       </body>
     </html>
   );

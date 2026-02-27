@@ -47,8 +47,8 @@ export default function Footer() {
                 <div className="mt-12 pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-medium text-slate-500">
                     <p>© {new Date().getFullYear()} تك كومبير (TechCompare IQ). جميع الحقوق محفوظة.</p>
                     <div className="flex gap-4">
-                        <a href="#" className="hover:text-brand-dark transition-colors">شروط الاستخدام</a>
-                        <a href="#" className="hover:text-brand-dark transition-colors">سياسة الخصوصية</a>
+                        <a href="/terms" target="_blank" rel="noopener noreferrer" className="hover:text-brand-dark transition-colors">شروط الاستخدام</a>
+                        <a href="/privacy" target="_blank" rel="noopener noreferrer" className="hover:text-brand-dark transition-colors">سياسة الخصوصية</a>
                     </div>
                 </div>
             </div>

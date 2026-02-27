@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowRight, Plus, Trash2, Save, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowRight, Plus, Trash2, Save, Loader2, Calculator } from "lucide-react";
 import type { Product, ProductCategory } from "@/lib/types";
 
 interface Props {
@@ -17,7 +17,7 @@ export default function ProductForm({ category, existingProduct, onSuccess, onCa
     const [name, setName] = useState(existingProduct?.name || "");
     const [brand, setBrand] = useState(existingProduct?.brand || "");
     const [priceUSD, setPriceUSD] = useState(existingProduct?.price_usd || 0);
-    const [priceIQD, setPriceIQD] = useState(existingProduct?.price_iqd || 0);
+    const [exchangeRate, setExchangeRate] = useState(1500);
     const [rating, setRating] = useState(existingProduct?.rating || 0);
     const [tag, setTag] = useState(existingProduct?.tag || "");
     const [bgColor, setBgColor] = useState(existingProduct?.bg_color || "bg-gradient-to-br from-slate-100 to-slate-50");
@@ -33,6 +33,15 @@ export default function ProductForm({ category, existingProduct, onSuccess, onCa
     );
     const [saving, setSaving] = useState(false);
 
+    useEffect(() => {
+        fetch("/api/settings")
+            .then(res => res.json())
+            .then(data => {
+                if (data?.exchange_rate) setExchangeRate(data.exchange_rate);
+            })
+            .catch(err => console.error(err));
+    }, []);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSaving(true);
@@ -47,7 +56,7 @@ export default function ProductForm({ category, existingProduct, onSuccess, onCa
             name,
             brand,
             price_usd: priceUSD,
-            price_iqd: priceIQD,
+            price_iqd: priceUSD * (exchangeRate / 100),
             rating,
             tag,
             bg_color: bgColor,
@@ -115,7 +124,18 @@ export default function ProductForm({ category, existingProduct, onSuccess, onCa
                         <Field label="اسم المنتج" value={name} onChange={setName} required />
                         <Field label="العلامة التجارية" value={brand} onChange={setBrand} required />
                         <Field label="السعر (USD)" value={priceUSD} onChange={(v) => setPriceUSD(Number(v))} type="number" required />
-                        <Field label="السعر (IQD)" value={priceIQD} onChange={(v) => setPriceIQD(Number(v))} type="number" required />
+                        <div>
+                            <label className="block text-sm font-bold text-slate-600 mb-1.5 flex items-center gap-1.5">
+                                <Calculator className="w-4 h-4 text-emerald-600" />
+                                السعر (IQD) - محسوب تلقائياً
+                            </label>
+                            <input
+                                type="text"
+                                value={(priceUSD * (exchangeRate / 100)).toLocaleString() + " د.ع"}
+                                disabled
+                                className="w-full px-4 py-2.5 rounded-xl border border-emerald-100 bg-emerald-50/50 text-emerald-800 font-bold text-sm focus:outline-none cursor-not-allowed"
+                            />
+                        </div>
                         <Field label="التقييم (من 5)" value={rating} onChange={(v) => setRating(Number(v))} type="number" step="0.1" />
                         <Field label="الوسم المميز" value={tag} onChange={setTag} placeholder="مثال: الأكثر مبيعاً" />
                     </div>

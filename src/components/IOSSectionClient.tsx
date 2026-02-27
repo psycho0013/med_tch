@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useCurrency } from "./CurrencyContext";
 import { ChevronRight, Cpu, Battery, Camera, Star, Apple } from "lucide-react";
 import SpecsModal from "./SpecsModal";
 import type { Product } from "@/lib/types";
 
 export default function IOSSectionClient({ products }: { products: Product[] }) {
+    const { formatPrice } = useCurrency();
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
     if (products.length === 0) return null;
@@ -60,9 +62,8 @@ export default function IOSSectionClient({ products }: { products: Product[] }) 
                                     })}
                                 </div>
                                 <div className="pt-4 border-t border-slate-100 mt-auto space-y-4">
-                                    <div className="flex items-end justify-between">
-                                        <div className="text-2xl font-black text-slate-900">${product.price_usd}</div>
-                                        <div className="text-sm font-bold text-slate-500">{product.price_iqd.toLocaleString('ar-IQ')} <span className="text-[10px]">د.ع</span></div>
+                                    <div className="flex items-end justify-center">
+                                        <div className="text-xl font-black text-brand-dark bg-brand-light/10 px-4 py-1.5 rounded-xl border border-brand-light/20">{formatPrice(product.price_usd)}</div>
                                     </div>
                                     <button onClick={() => setSelectedProduct(product)} className="w-full py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors flex items-center justify-center gap-2">
                                         عرض المواصفات كاملة

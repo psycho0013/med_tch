@@ -8,9 +8,10 @@ import {
 import ProductsManager from "./components/ProductsManager";
 import HeroEditor from "./components/HeroEditor";
 import SettingsEditor from "./components/SettingsEditor";
+import OffersAdmin from "./components/OffersAdmin";
 import type { ProductCategory } from "@/lib/types";
 
-type AdminView = ProductCategory | "hero" | "settings" | "dashboard";
+type AdminView = ProductCategory | "hero" | "settings" | "dashboard" | "offers";
 
 const sidebarItems: { key: AdminView; label: string; icon: React.ReactNode }[] = [
     { key: "dashboard", label: "لوحة التحكم", icon: <LayoutDashboard className="w-5 h-5" /> },
@@ -20,6 +21,7 @@ const sidebarItems: { key: AdminView; label: string; icon: React.ReactNode }[] =
     { key: "pcs", label: "تجميعات PC", icon: <Monitor className="w-5 h-5" /> },
     { key: "monitors", label: "شاشات", icon: <Tv className="w-5 h-5" /> },
     { key: "accessories", label: "إكسسوارات", icon: <Mouse className="w-5 h-5" /> },
+    { key: "offers", label: "العروض", icon: <Zap className="w-5 h-5" /> },
     { key: "hero", label: "قسم الهيرو", icon: <Type className="w-5 h-5" /> },
     { key: "settings", label: "إعدادات الموقع", icon: <Settings className="w-5 h-5" /> },
 ];
@@ -45,8 +47,8 @@ export default function AdminPage() {
                             key={item.key}
                             onClick={() => setActiveView(item.key)}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeView === item.key
-                                    ? "bg-brand-dark text-white shadow-md"
-                                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                                ? "bg-brand-dark text-white shadow-md"
+                                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                                 }`}
                         >
                             {item.icon}
@@ -67,6 +69,7 @@ export default function AdminPage() {
                 {activeView === "dashboard" && <DashboardHome onNavigate={setActiveView} />}
                 {activeView === "hero" && <HeroEditor />}
                 {activeView === "settings" && <SettingsEditor />}
+                {activeView === "offers" && <OffersAdmin />}
                 {["android", "ios", "laptops", "pcs", "monitors", "accessories"].includes(activeView) && (
                     <ProductsManager category={activeView as ProductCategory} />
                 )}

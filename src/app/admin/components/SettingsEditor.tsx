@@ -6,6 +6,7 @@ import { Save, Loader2, Settings } from "lucide-react";
 export default function SettingsEditor() {
     const [siteName, setSiteName] = useState("");
     const [description, setDescription] = useState("");
+    const [exchangeRate, setExchangeRate] = useState(1500);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
@@ -17,6 +18,7 @@ export default function SettingsEditor() {
                 if (data && !data.error) {
                     setSiteName(data.site_name || "");
                     setDescription(data.description || "");
+                    if (data.exchange_rate) setExchangeRate(data.exchange_rate);
                 }
             })
             .finally(() => setLoading(false));
@@ -29,7 +31,7 @@ export default function SettingsEditor() {
             await fetch("/api/settings", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ site_name: siteName, description }),
+                body: JSON.stringify({ site_name: siteName, description, exchange_rate: exchangeRate }),
             });
             setSaved(true);
             setTimeout(() => setSaved(false), 3000);
@@ -55,7 +57,7 @@ export default function SettingsEditor() {
                     <Settings className="w-7 h-7 text-amber-600" />
                     إعدادات الموقع
                 </h2>
-                <p className="text-slate-500 text-sm font-medium mt-1">عدّل اسم الموقع والوصف العام.</p>
+                <p className="text-slate-500 text-sm font-medium mt-1">عدّل اسم الموقع، الوصف العام، وسعر الصرف.</p>
             </div>
 
             <div className="max-w-2xl bg-white rounded-2xl border border-slate-200 p-6 space-y-6">
@@ -72,6 +74,17 @@ export default function SettingsEditor() {
                         value={description} onChange={(e) => setDescription(e.target.value)} rows={3}
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-dark/20 resize-none"
                     />
+                </div>
+
+                <div className="pt-4 border-t border-slate-100">
+                    <label className="block text-sm font-bold text-slate-600 mb-1.5">سعر الصرف (كل 100 دولار بالدينار العراقي)</label>
+                    <div className="flex items-center gap-3">
+                        <input
+                            type="number" value={exchangeRate} onChange={(e) => setExchangeRate(Number(e.target.value))}
+                            className="w-1/3 px-4 py-3 rounded-xl border border-slate-200 text-lg font-bold text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-dark/20"
+                        />
+                        <span className="text-slate-500 text-sm font-medium">سيعتمد هذا الرقم لحساب الأسعار بالدينار تلقائياً.</span>
+                    </div>
                 </div>
 
                 <div className="flex items-center gap-4 pt-2">

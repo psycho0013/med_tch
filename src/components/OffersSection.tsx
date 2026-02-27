@@ -1,28 +1,36 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Zap, Timer, ArrowLeft, Tag } from "lucide-react";
 
-const offers = [
-    {
-        id: 1,
-        title: "عرض العودة للمدارس",
-        desc: "خصم 15% على جميع لابتوبات الآيباد وماك بوك إير للطلاب.",
-        imageColor: "bg-blue-500",
-        badge: "حصري",
-        timeLeft: "يومان و 5 ساعات",
-    },
-    {
-        id: 2,
-        title: "صفقة الأسبوع: Galaxy S24+",
-        desc: "احصل على سماعات Buds FE مجاناً عند شراء S24 Plus.",
-        imageColor: "bg-brand-dark",
-        badge: "نفاذ الكمية قريباً",
-        timeLeft: "12 ساعة",
-    },
-];
+interface Offer {
+    id: string;
+    title: string;
+    desc_text: string;
+    image_color: string;
+    badge: string;
+    time_left: string;
+}
 
 export default function OffersSection() {
+    const [offers, setOffers] = useState<Offer[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetch("/api/offers")
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) setOffers(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Failed to fetch offers", err);
+                setLoading(false);
+            });
+    }, []);
+
+    if (loading || offers.length === 0) return null;
     return (
         <section id="offers" className="py-20 relative overflow-hidden bg-brand-light/5 border-y border-brand-light/10">
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay pointer-events-none" />
@@ -57,7 +65,7 @@ export default function OffersSection() {
                             transition={{ duration: 0.6 }}
                             className="group relative rounded-3xl overflow-hidden glass-panel border border-white p-6 sm:p-8 flex flex-col sm:flex-row gap-6 items-center hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-pointer bg-white/60"
                         >
-                            <div className={`w-full sm:w-48 aspect-square sm:aspect-auto sm:h-full rounded-2xl ${offer.imageColor} relative overflow-hidden shadow-inner flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-500`}>
+                            <div className={`w-full sm:w-48 aspect-square sm:aspect-auto sm:h-full rounded-2xl ${offer.image_color} relative overflow-hidden shadow-inner flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-500`}>
                                 <Tag className="w-16 h-16 text-white/50 absolute rotate-12" />
                                 <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full blur-xl absolute" />
                             </div>
@@ -69,7 +77,7 @@ export default function OffersSection() {
                                     </span>
                                     <div className="flex items-center gap-1 text-slate-500 text-xs font-bold bg-slate-100 px-2 py-1 rounded-md">
                                         <Timer className="w-3.5 h-3.5" />
-                                        ينتهي خلال: {offer.timeLeft}
+                                        ينتهي خلال: {offer.time_left}
                                     </div>
                                 </div>
 
@@ -77,7 +85,7 @@ export default function OffersSection() {
                                     {offer.title}
                                 </h3>
                                 <p className="text-slate-600 font-medium text-sm leading-relaxed mb-6">
-                                    {offer.desc}
+                                    {offer.desc_text}
                                 </p>
 
                                 <button className="w-full sm:w-auto mt-auto py-3 px-6 rounded-xl bg-brand-dark text-white font-bold text-sm hover:bg-blue-700 transition-colors shadow-md shadow-brand-dark/20 text-center">

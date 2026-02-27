@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { useCurrency } from "./CurrencyContext";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
@@ -13,6 +14,7 @@ interface SpecsModalProps {
 }
 
 export default function SpecsModal({ isOpen, onClose, product, titleIcon }: SpecsModalProps) {
+    const { formatPrice } = useCurrency();
     const [mounted, setMounted] = useState(false);
     const [cachedProduct, setCachedProduct] = useState(product);
 

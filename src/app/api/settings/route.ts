@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
 // GET: Fetch site settings
@@ -13,7 +13,7 @@ export async function GET() {
 }
 
 // PUT: Update site settings
-export async function PUT(request: NextRequest) {
+export async function PUT(request: Request) {
     const body = await request.json();
 
     const { data, error } = await supabase

@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useCurrency } from "./CurrencyContext";
 import { Tv, ChevronLeft, Star, MonitorPlay, Zap, RefreshCw } from "lucide-react";
 import SpecsModal from "./SpecsModal";
 import type { Product } from "@/lib/types";
 
 export default function MonitorsSectionClient({ products }: { products: Product[] }) {
+    const { formatPrice } = useCurrency();
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     if (products.length === 0) return null;
 
@@ -47,9 +49,8 @@ export default function MonitorsSectionClient({ products }: { products: Product[
                                     ))}
                                 </div>
                                 <div className="pt-4 border-t border-slate-100 mt-auto space-y-4">
-                                    <div className="flex items-end justify-between">
-                                        <div className="text-2xl font-black text-indigo-600">${product.price_usd}</div>
-                                        <div className="text-sm font-bold text-slate-500">{product.price_iqd.toLocaleString('ar-IQ')} <span className="text-[10px]">د.ع</span></div>
+                                    <div className="flex items-end justify-center">
+                                        <div className="text-xl font-black text-brand-dark bg-brand-light/10 px-4 py-1.5 rounded-xl border border-brand-light/20">{formatPrice(product.price_usd)}</div>
                                     </div>
                                     <button onClick={() => setSelectedProduct(product)} className="w-full py-2.5 rounded-xl border-2 border-indigo-100 text-indigo-700 font-bold text-sm hover:bg-indigo-50 hover:border-indigo-200 transition-colors flex items-center justify-center gap-2">التفاصيل التقنية</button>
                                 </div>

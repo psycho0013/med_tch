@@ -4,10 +4,13 @@ import { useState } from "react";
 import { default as NextLink } from "next/link";
 import { Menu, X, Smartphone, Laptop, Zap, User, Apple, Monitor, Tv, Mouse } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import LoginModal from "./LoginModal";
+import { useCurrency } from "./CurrencyContext";
 
 export default function Navbar() {
-    const [currency, setCurrency] = useState<"IQD" | "USD">("IQD");
+    const { currency, setCurrency } = useCurrency();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
     const toggleCurrency = () => {
         setCurrency(currency === "IQD" ? "USD" : "IQD");
@@ -71,9 +74,9 @@ export default function Navbar() {
                                 />
                             </button>
 
-                            <NextLink href="/admin" className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 hover:bg-brand-dark hover:text-white text-slate-600 transition-colors" title="تسجيل الدخول / لوحة التحكم">
+                            <button onClick={() => setIsLoginModalOpen(true)} className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 hover:bg-brand-dark hover:text-white text-slate-600 transition-colors" title="تسجيل الدخول / لوحة التحكم">
                                 <User className="w-5 h-5" />
-                            </NextLink>
+                            </button>
                         </div>
                     </div>
 
@@ -121,19 +124,23 @@ export default function Navbar() {
                                     </button>
                                 </div>
 
-                                <NextLink
-                                    href="/admin"
-                                    onClick={() => setIsMobileMenuOpen(false)}
+                                <button
+                                    onClick={() => {
+                                        setIsMobileMenuOpen(false);
+                                        setIsLoginModalOpen(true);
+                                    }}
                                     className="flex items-center justify-center gap-2 px-4 py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors w-full shadow-md"
                                 >
                                     <User className="w-5 h-5" />
                                     تسجيل الدخول / لوحة التحكم
-                                </NextLink>
+                                </button>
                             </div>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
         </nav>
     );
 }

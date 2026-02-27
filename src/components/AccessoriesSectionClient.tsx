@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useCurrency } from "./CurrencyContext";
 import { Keyboard, Mouse, Headphones, Wifi, ChevronLeft, Star, Tag } from "lucide-react";
 import SpecsModal from "./SpecsModal";
 import type { Product } from "@/lib/types";
@@ -18,6 +19,7 @@ function guessIcon(product: Product) {
 }
 
 export default function AccessoriesSectionClient({ products }: { products: Product[] }) {
+    const { formatPrice } = useCurrency();
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     if (products.length === 0) return null;
 
@@ -51,10 +53,9 @@ export default function AccessoriesSectionClient({ products }: { products: Produ
                                         {product.features.map((feat, i) => (<span key={i} className="px-2.5 py-1 text-xs font-bold text-slate-600 bg-slate-100 rounded-md border border-slate-200">{feat}</span>))}
                                     </div>
                                     <div className="pt-4 border-t border-slate-100 mt-auto space-y-4">
-                                        <div className="flex items-end justify-between">
-                                            <div className="text-2xl font-black text-slate-800">${product.price_usd}</div>
-                                            <div className="text-sm font-bold text-slate-500">{product.price_iqd.toLocaleString('ar-IQ')} <span className="text-[10px]">د.ع</span></div>
-                                        </div>
+                                        <div className="flex items-end justify-center">
+                                        <div className="text-xl font-black text-brand-dark bg-brand-light/10 px-4 py-1.5 rounded-xl border border-brand-light/20">{formatPrice(product.price_usd)}</div>
+                                    </div>
                                         <button onClick={() => setSelectedProduct(product)} className="w-full py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-sm hover:bg-brand-dark hover:text-white hover:border-brand-dark transition-colors flex items-center justify-center">قراءة المواصفات</button>
                                     </div>
                                 </div>

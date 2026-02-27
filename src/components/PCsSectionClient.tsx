@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useCurrency } from "./CurrencyContext";
 import { ChevronLeft, Monitor, ChevronRight } from "lucide-react";
 import SpecsModal from "./SpecsModal";
 import type { Product } from "@/lib/types";
 
 export default function PCsSectionClient({ products }: { products: Product[] }) {
+    const { formatPrice } = useCurrency();
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     if (products.length === 0) return null;
 
@@ -50,9 +52,8 @@ export default function PCsSectionClient({ products }: { products: Product[] }) 
                                     ))}
                                 </div>
                                 <div className="mt-auto pt-6 border-t border-slate-100 space-y-4">
-                                    <div className="flex items-end justify-between">
-                                        <div><div className="text-slate-400 text-xs font-medium mb-1">السعر التقريبي</div><div className="text-2xl font-black text-slate-900">${product.price_usd}</div></div>
-                                        <div className="text-sm font-bold text-slate-600">{product.price_iqd.toLocaleString('ar-IQ')} <span className="text-[10px]">د.ع</span></div>
+                                    <div className="flex items-end justify-center">
+                                        <div className="text-xl font-black text-brand-dark bg-brand-light/10 px-4 py-1.5 rounded-xl border border-brand-light/20">{formatPrice(product.price_usd)}</div>
                                     </div>
                                     <button onClick={() => setSelectedProduct(product)} className="w-full py-2.5 rounded-xl border-2 border-purple-100 text-purple-700 font-bold text-sm hover:bg-purple-50 hover:border-purple-200 transition-colors flex items-center justify-center gap-2">مواصفات القطع</button>
                                 </div>
