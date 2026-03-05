@@ -60,3 +60,17 @@ export async function getOfferProducts(): Promise<Product[]> {
 
     return data || [];
 }
+
+export async function getAllProducts(): Promise<Product[]> {
+    const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Error fetching all products:", error.message);
+        return [];
+    }
+
+    return data || [];
+}

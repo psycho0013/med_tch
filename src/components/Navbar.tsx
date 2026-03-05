@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { default as NextLink } from "next/link";
-import { Menu, X, Smartphone, Laptop, Zap, User, Apple, Monitor, Tv, Mouse } from "lucide-react";
+import { Menu, X, Smartphone, Laptop, Zap, User, Apple, Monitor, Tv, Mouse, ArrowRightLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LoginModal from "./LoginModal";
 import { useCurrency } from "./CurrencyContext";
@@ -17,13 +17,14 @@ export default function Navbar() {
     };
 
     const navLinks = [
-        { name: "أندرويد", href: "#android", icon: <Smartphone className="w-4 h-4" /> },
-        { name: "أبل", href: "#ios", icon: <Apple className="w-4 h-4" /> },
-        { name: "لابتوبات", href: "#laptops", icon: <Laptop className="w-4 h-4" /> },
-        { name: "تجميعات PC", href: "#pc", icon: <Monitor className="w-4 h-4" /> },
-        { name: "شاشات", href: "#monitors", icon: <Tv className="w-4 h-4" /> },
-        { name: "قطع وإكسسوارات", href: "#accessories", icon: <Mouse className="w-4 h-4" /> },
-        { name: "العروض", href: "#offers", icon: <Zap className="w-4 h-4" /> },
+        { name: "أندرويد", href: "/#android", icon: <Smartphone className="w-4 h-4" /> },
+        { name: "أبل", href: "/#ios", icon: <Apple className="w-4 h-4" /> },
+        { name: "لابتوبات", href: "/#laptops", icon: <Laptop className="w-4 h-4" /> },
+        { name: "تجميعات PC", href: "/#pc", icon: <Monitor className="w-4 h-4" /> },
+        { name: "شاشات", href: "/#monitors", icon: <Tv className="w-4 h-4" /> },
+        { name: "المقارنة الذكية", href: "/compare", icon: <ArrowRightLeft className="w-4 h-4 text-brand-dark" /> },
+        { name: "قطع وإكسسوارات", href: "/#accessories", icon: <Mouse className="w-4 h-4" /> },
+        { name: "العروض", href: "/#offers", icon: <Zap className="w-4 h-4" /> },
     ];
 
     return (

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Search, Smartphone, Monitor, Laptop, Headphones, Watch, Gamepad2, Tablet, Speaker } from "lucide-react";
+import Link from "next/link";
 
 export default function Hero() {
     const [title, setTitle] = useState("قارن، اختار، واشتري بذكاء");
@@ -73,10 +74,10 @@ export default function Hero() {
                                 <span>{ctaText}</span>
                             </button>
 
-                            <button className="w-full sm:w-auto px-8 py-4 rounded-2xl glass-panel text-slate-800 font-bold text-lg hover:bg-white/80 transition-all flex items-center justify-center gap-2 group">
+                            <Link href="/compare" className="w-full sm:w-auto px-8 py-4 rounded-2xl glass-panel text-slate-800 font-bold text-lg hover:bg-white/80 transition-all flex items-center justify-center gap-2 group">
                                 <span>المقارنة الذكية</span>
                                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                            </button>
+                            </Link>
                         </div>
                     </motion.div>
 
