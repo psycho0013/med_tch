@@ -21,6 +21,8 @@ const sidebarItems: { key: AdminView; label: string; icon: React.ReactNode }[] =
     { key: "pcs", label: "تجميعات PC", icon: <Monitor className="w-5 h-5" /> },
     { key: "monitors", label: "شاشات", icon: <Tv className="w-5 h-5" /> },
     { key: "accessories", label: "إكسسوارات", icon: <Mouse className="w-5 h-5" /> },
+    { key: "apple-watches", label: "ساعات أبل", icon: <Apple className="w-5 h-5" /> },
+    { key: "other-watches", label: "ساعات ذكية أخرى", icon: <Smartphone className="w-5 h-5" /> },
     { key: "offers", label: "العروض", icon: <Zap className="w-5 h-5" /> },
     { key: "hero", label: "قسم الهيرو", icon: <Type className="w-5 h-5" /> },
     { key: "settings", label: "إعدادات الموقع", icon: <Settings className="w-5 h-5" /> },
@@ -70,7 +72,7 @@ export default function AdminPage() {
                 {activeView === "hero" && <HeroEditor />}
                 {activeView === "settings" && <SettingsEditor />}
                 {activeView === "offers" && <OffersAdmin />}
-                {["android", "ios", "laptops", "pcs", "monitors", "accessories"].includes(activeView) && (
+                {["android", "ios", "laptops", "pcs", "monitors", "accessories", "apple-watches", "other-watches"].includes(activeView) && (
                     <ProductsManager category={activeView as ProductCategory} />
                 )}
             </main>
@@ -87,6 +89,8 @@ function DashboardHome({ onNavigate }: { onNavigate: (v: AdminView) => void }) {
         { key: "pcs", label: "تجميعات PC", icon: <Monitor className="w-8 h-8" />, color: "from-purple-500 to-purple-600" },
         { key: "monitors", label: "شاشات", icon: <Tv className="w-8 h-8" />, color: "from-indigo-500 to-indigo-600" },
         { key: "accessories", label: "إكسسوارات", icon: <Mouse className="w-8 h-8" />, color: "from-slate-500 to-slate-600" },
+        { key: "apple-watches", label: "ساعات أبل", icon: <Apple className="w-8 h-8" />, color: "from-red-500 to-red-600" },
+        { key: "other-watches", label: "ساعات ذكية أخرى", icon: <Smartphone className="w-8 h-8" />, color: "from-orange-500 to-orange-600" },
     ];
 
     return (

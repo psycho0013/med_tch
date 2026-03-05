@@ -6,6 +6,8 @@ import AndroidSection from "@/components/AndroidSection";
 import IOSSection from "@/components/IOSSection";
 import LaptopsSection from "@/components/LaptopsSection";
 import PCsSection from "@/components/PCsSection";
+import AppleWatchesSection from "@/components/AppleWatchesSection";
+import OtherWatchesSection from "@/components/OtherWatchesSection";
 import MonitorsSection from "@/components/MonitorsSection";
 import AccessoriesSection from "@/components/AccessoriesSection";
 import OffersSection from "@/components/OffersSection";
@@ -37,7 +39,14 @@ export default function Home() {
         <LaptopsSection />
         <PCsSection />
         <MonitorsSection />
-        <AccessoriesSection />
+        {/* Subtle separator */}
+        <div className="max-w-4xl mx-auto px-8 w-full py-8">
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
+        </div>
+
+        {/* Watches Section */}
+        <AppleWatchesSection />
+        <OtherWatchesSection />
 
         <OffersSection />
         <Assistant />

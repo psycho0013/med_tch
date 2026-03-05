@@ -99,7 +99,7 @@ export default function AndroidSectionClient({ products }: { products: Product[]
             <SpecsModal
                 isOpen={!!selectedProduct}
                 onClose={() => setSelectedProduct(null)}
-                product={selectedProduct ? { ...selectedProduct, priceUSD: selectedProduct.price_usd, fullSpecs: selectedProduct.full_specs } : null}
+                product={selectedProduct}
                 titleIcon={<Smartphone className="w-6 h-6 text-emerald-600" />}
             />
         </section>

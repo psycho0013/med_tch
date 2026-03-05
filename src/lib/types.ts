@@ -1,5 +1,5 @@
 // ===== Product Types =====
-export type ProductCategory = "android" | "ios" | "laptops" | "pcs" | "monitors" | "accessories";
+export type ProductCategory = "android" | "ios" | "laptops" | "pcs" | "monitors" | "accessories" | "apple-watches" | "other-watches";
 
 export interface Product {
     id: string;

@@ -12,6 +12,8 @@ const categoryLabels: Record<ProductCategory, string> = {
     pcs: "تجميعات PC",
     monitors: "شاشات",
     accessories: "إكسسوارات",
+    "apple-watches": "ساعات أبل",
+    "other-watches": "ساعات ذكية أخرى",
 };
 
 export default function ProductsManager({ category }: { category: ProductCategory }) {

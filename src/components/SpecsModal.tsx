@@ -6,10 +6,12 @@ import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
+import type { Product } from "@/lib/types";
+
 interface SpecsModalProps {
     isOpen: boolean;
     onClose: () => void;
-    product: any;
+    product: Product | null;
     titleIcon?: React.ReactNode;
 }
 
@@ -22,19 +24,18 @@ export default function SpecsModal({ isOpen, onClose, product, titleIcon }: Spec
         setMounted(true);
     }, []);
 
-    useEffect(() => {
-        if (product) {
-            setCachedProduct(product);
-        }
-    }, [product]);
+    // Store product in state when it opens, to keep it mounted during exit animation
+    if (product && product.id !== cachedProduct?.id) {
+        setCachedProduct(product);
+    }
 
     if (!mounted) return null;
 
     const displayProduct = product || cachedProduct;
 
-    // Support both old (fullSpecs/priceUSD) and new (full_specs/price_usd) field names
-    const specs = displayProduct?.fullSpecs || displayProduct?.full_specs || {};
-    const priceUSD = displayProduct?.priceUSD || displayProduct?.price_usd || 0;
+    // Use correct field names
+    const specs = displayProduct?.full_specs || {};
+    const priceUSD = displayProduct?.price_usd || 0;
 
     return createPortal(
         <AnimatePresence>
