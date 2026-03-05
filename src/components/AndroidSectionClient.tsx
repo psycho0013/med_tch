@@ -6,6 +6,7 @@ import { useCurrency } from "./CurrencyContext";
 import { ChevronRight, Cpu, Battery, Camera, Star, Smartphone } from "lucide-react";
 import SpecsModal from "./SpecsModal";
 import type { Product } from "@/lib/types";
+import Link from "next/link";
 
 export default function AndroidSectionClient({ products }: { products: Product[] }) {
     const { formatPrice } = useCurrency();
@@ -29,9 +30,12 @@ export default function AndroidSectionClient({ products }: { products: Product[]
                             تشكيلة واسعة من روائع الأندرويد، استكشف الإمكانيات واختر ما يناسب تطلعاتك.
                         </p>
                     </div>
-                    <button className="flex items-center justify-center gap-2 bg-white text-slate-700 font-bold px-6 py-3 rounded-xl border border-slate-200 hover:border-emerald-500 hover:text-emerald-600 transition-all shadow-sm">
-                        عرض كل الأجهزة <ChevronRight className="w-5 h-5" />
-                    </button>
+                    <Link href="/category/android" className="relative overflow-hidden flex items-center justify-center gap-2 bg-white text-slate-700 font-bold px-6 py-3 rounded-xl border border-slate-200 transition-all shadow-sm group">
+                        <span className="absolute inset-0 w-0 bg-emerald-500 transition-all duration-300 ease-out group-hover:w-full"></span>
+                        <span className="relative flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                            عرض كل هواتف أندرويد <ChevronRight className="w-5 h-5 group-hover:translate-x-1 inline-block transition-transform duration-300" />
+                        </span>
+                    </Link>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">

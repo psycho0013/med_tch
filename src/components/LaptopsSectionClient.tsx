@@ -6,6 +6,7 @@ import { useCurrency } from "./CurrencyContext";
 import { Cpu, Monitor, ChevronLeft, Star, HardDrive, Laptop } from "lucide-react";
 import SpecsModal from "./SpecsModal";
 import type { Product } from "@/lib/types";
+import Link from "next/link";
 
 export default function LaptopsSectionClient({ products }: { products: Product[] }) {
     const { formatPrice } = useCurrency();
@@ -23,7 +24,12 @@ export default function LaptopsSectionClient({ products }: { products: Product[]
                         <h2 className="text-3xl lg:text-4xl font-black text-slate-900 mb-2">اقوى <span className="text-blue-600">اللابتوبات</span> لجميع الاستخدامات</h2>
                         <p className="text-slate-500 font-medium text-lg">أجهزة للقيمنق، المونتاج، العمل والدراسة من أبل وباقي الشركات.</p>
                     </div>
-                    <button className="flex items-center gap-2 text-blue-600 font-bold hover:gap-3 transition-all">تصفح اللابتوبات <ChevronLeft className="w-5 h-5" /></button>
+                    <Link href="/category/laptops" className="relative overflow-hidden flex items-center justify-center gap-2 bg-white text-blue-700 font-bold px-6 py-3 rounded-xl border border-blue-200 transition-all shadow-sm group">
+                        <span className="absolute inset-0 w-0 bg-blue-600 transition-all duration-300 ease-out group-hover:w-full"></span>
+                        <span className="relative flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                            تصفح اللابتوبات <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 inline-block transition-transform duration-300" />
+                        </span>
+                    </Link>
                 </div>
                 <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
                     {products.map((product, index) => (

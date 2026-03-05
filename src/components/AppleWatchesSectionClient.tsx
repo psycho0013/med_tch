@@ -6,6 +6,7 @@ import { useCurrency } from "./CurrencyContext";
 import { ChevronRight, Cpu, Battery, Activity, Star, Watch } from "lucide-react";
 import SpecsModal from "./SpecsModal";
 import type { Product } from "@/lib/types";
+import Link from "next/link";
 
 export default function AppleWatchesSectionClient({ products }: { products: Product[] }) {
     const { formatPrice } = useCurrency();
@@ -29,9 +30,12 @@ export default function AppleWatchesSectionClient({ products }: { products: Prod
                             راقب صحتك، تلقى التنبيهات، وابق متصلاً دائماً مع أحدث إصدارات Apple Watch.
                         </p>
                     </div>
-                    <button className="flex items-center justify-center gap-2 bg-slate-50 text-red-700 font-bold px-6 py-3 rounded-xl border border-red-200 hover:bg-red-50 hover:border-red-500 transition-all shadow-sm">
-                        عرض الساعات <ChevronRight className="w-5 h-5" />
-                    </button>
+                    <Link href="/category/apple-watches" className="relative overflow-hidden flex items-center justify-center gap-2 bg-white text-red-700 font-bold px-6 py-3 rounded-xl border border-red-200 transition-all shadow-sm group">
+                        <span className="absolute inset-0 w-0 bg-red-600 transition-all duration-300 ease-out group-hover:w-full"></span>
+                        <span className="relative flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                            عرض الساعات <ChevronRight className="w-5 h-5 group-hover:translate-x-1 inline-block transition-transform duration-300" />
+                        </span>
+                    </Link>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -6,6 +6,7 @@ import { useCurrency } from "./CurrencyContext";
 import { Keyboard, Mouse, Headphones, Wifi, ChevronLeft, Star, Tag } from "lucide-react";
 import SpecsModal from "./SpecsModal";
 import type { Product } from "@/lib/types";
+import Link from "next/link";
 
 const categoryIcons: Record<string, any> = { keyboard: Keyboard, mouse: Mouse, audio: Headphones, router: Wifi };
 
@@ -32,7 +33,12 @@ export default function AccessoriesSectionClient({ products }: { products: Produ
                         <h2 className="text-3xl lg:text-5xl font-black text-slate-900 mb-4 leading-tight">أفضل <span className="text-brand-dark">الملحقات التقنية</span> لكافة الاستخدامات</h2>
                         <p className="text-slate-600 font-medium text-lg">كيبوردات احترافية، ماوسات سريعة، سماعات نقية وراوترات جبّارة.</p>
                     </div>
-                    <button className="flex items-center justify-center gap-2 bg-white text-brand-dark font-bold px-6 py-3 rounded-xl border border-slate-200 hover:border-brand-dark transition-all shadow-sm">عرض كل القطع <ChevronLeft className="w-5 h-5" /></button>
+                    <Link href="/category/accessories" className="relative overflow-hidden flex items-center justify-center gap-2 bg-white text-brand-dark font-bold px-6 py-3 rounded-xl border border-slate-200 transition-all shadow-sm group">
+                        <span className="absolute inset-0 w-0 bg-brand-dark transition-all duration-300 ease-out group-hover:w-full"></span>
+                        <span className="relative flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                            عرض كل القطع <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 inline-block transition-transform duration-300" />
+                        </span>
+                    </Link>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {products.map((product, index) => {
@@ -54,8 +60,8 @@ export default function AccessoriesSectionClient({ products }: { products: Produ
                                     </div>
                                     <div className="pt-4 border-t border-slate-100 mt-auto space-y-4">
                                         <div className="flex items-end justify-center">
-                                        <div className="text-xl font-black text-brand-dark bg-brand-light/10 px-4 py-1.5 rounded-xl border border-brand-light/20">{formatPrice(product.price_usd)}</div>
-                                    </div>
+                                            <div className="text-xl font-black text-brand-dark bg-brand-light/10 px-4 py-1.5 rounded-xl border border-brand-light/20">{formatPrice(product.price_usd)}</div>
+                                        </div>
                                         <button onClick={() => setSelectedProduct(product)} className="w-full py-2.5 rounded-xl border border-slate-300 text-slate-700 font-bold text-sm hover:bg-brand-dark hover:text-white hover:border-brand-dark transition-colors flex items-center justify-center">قراءة المواصفات</button>
                                     </div>
                                 </div>

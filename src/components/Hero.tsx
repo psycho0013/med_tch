@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Search } from "lucide-react";
+import { ArrowLeft, Search, Smartphone, Monitor, Laptop, Headphones, Watch, Gamepad2, Tablet, Speaker } from "lucide-react";
 
 export default function Hero() {
     const [title, setTitle] = useState("قارن، اختار، واشتري بذكاء");
@@ -11,6 +11,8 @@ export default function Hero() {
     const [badgeTitle, setBadgeTitle] = useState("أفضل سعر");
     const [badgeText, setBadgeText] = useState("-15% خصم");
     const [badgeVisible, setBadgeVisible] = useState(true);
+    const [heroImageUrl, setHeroImageUrl] = useState("");
+    const [heroIcon, setHeroIcon] = useState("");
 
     useEffect(() => {
         fetch("/api/hero")
@@ -23,6 +25,8 @@ export default function Hero() {
                     if (data.badge_title !== undefined) setBadgeTitle(data.badge_title);
                     if (data.badge_text !== undefined) setBadgeText(data.badge_text);
                     if (data.badge_visible !== undefined) setBadgeVisible(data.badge_visible);
+                    if (data.hero_image_url) setHeroImageUrl(data.hero_image_url);
+                    if (data.hero_icon) setHeroIcon(data.hero_icon);
                 }
             })
             .catch(err => console.error("Failed to fetch hero content:", err));
@@ -100,21 +104,40 @@ export default function Hero() {
                             }}
                         >
                             {/* Fake UI inside the mockup */}
-                            <div className="flex justify-between items-center mb-8 opacity-70">
-                                <div className="w-8 h-8 rounded-full bg-slate-200" />
-                                <div className="w-24 h-4 rounded-full bg-slate-200" />
-                            </div>
+                            {heroImageUrl ? (
+                                <div className="flex-1 w-full h-full relative flex items-center justify-center">
+                                    <img src={heroImageUrl} alt="Hero Product" className="object-contain max-h-full" />
+                                </div>
+                            ) : heroIcon ? (
+                                <div className="flex-1 w-full h-full relative flex items-center justify-center text-brand-dark transition-colors">
+                                    {heroIcon === 'Smartphone' && <Smartphone className="w-32 h-32" />}
+                                    {heroIcon === 'Monitor' && <Monitor className="w-32 h-32" />}
+                                    {heroIcon === 'Laptop' && <Laptop className="w-32 h-32" />}
+                                    {heroIcon === 'Headphones' && <Headphones className="w-32 h-32" />}
+                                    {heroIcon === 'Watch' && <Watch className="w-32 h-32" />}
+                                    {heroIcon === 'Gamepad2' && <Gamepad2 className="w-32 h-32" />}
+                                    {heroIcon === 'Tablet' && <Tablet className="w-32 h-32" />}
+                                    {heroIcon === 'Speaker' && <Speaker className="w-32 h-32" />}
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="flex justify-between items-center mb-8 opacity-70">
+                                        <div className="w-8 h-8 rounded-full bg-slate-200" />
+                                        <div className="w-24 h-4 rounded-full bg-slate-200" />
+                                    </div>
 
-                            <div className="space-y-4 flex-1">
-                                <div className="w-full h-40 rounded-xl bg-gradient-to-tr from-brand-light/20 to-brand-dark/20 animate-pulse border border-white/50" />
-                                <div className="w-3/4 h-6 rounded-md bg-slate-200" />
-                                <div className="w-1/2 h-4 rounded-md bg-slate-100" />
-                            </div>
+                                    <div className="space-y-4 flex-1">
+                                        <div className="w-full h-40 rounded-xl bg-gradient-to-tr from-brand-light/20 to-brand-dark/20 animate-pulse border border-white/50" />
+                                        <div className="w-3/4 h-6 rounded-md bg-slate-200" />
+                                        <div className="w-1/2 h-4 rounded-md bg-slate-100" />
+                                    </div>
 
-                            <div className="mt-auto pt-6 flex justify-between items-center border-t border-slate-100/50">
-                                <div className="w-20 h-8 rounded-lg bg-brand-light/20" />
-                                <div className="w-10 h-10 rounded-full bg-brand-dark/10" />
-                            </div>
+                                    <div className="mt-auto pt-6 flex justify-between items-center border-t border-slate-100/50">
+                                        <div className="w-20 h-8 rounded-lg bg-brand-light/20" />
+                                        <div className="w-10 h-10 rounded-full bg-brand-dark/10" />
+                                    </div>
+                                </>
+                            )}
 
                             {/* Floating badges around the mockup */}
                             <AnimatePresence>

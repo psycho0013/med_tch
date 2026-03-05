@@ -6,6 +6,7 @@ import { useCurrency } from "./CurrencyContext";
 import { ChevronRight, Cpu, Battery, Camera, Star, Apple } from "lucide-react";
 import SpecsModal from "./SpecsModal";
 import type { Product } from "@/lib/types";
+import Link from "next/link";
 
 export default function IOSSectionClient({ products }: { products: Product[] }) {
     const { formatPrice } = useCurrency();
@@ -30,9 +31,12 @@ export default function IOSSectionClient({ products }: { products: Product[] }) 
                         </h2>
                         <p className="text-slate-600 font-medium text-lg">أداء استثنائي، كاميرات احترافية، ونظام تشغيل هو الأكثر استقراراً وأماناً.</p>
                     </div>
-                    <button className="flex items-center justify-center gap-2 bg-white text-slate-900 font-bold px-6 py-3 rounded-xl border-2 border-slate-900 hover:bg-slate-900 hover:text-white transition-all shadow-sm">
-                        عرض كل أجهزة آيفون <ChevronRight className="w-5 h-5" />
-                    </button>
+                    <Link href="/category/ios" className="relative overflow-hidden flex items-center justify-center gap-2 bg-white text-slate-900 font-bold px-6 py-3 rounded-xl border-2 border-slate-900 transition-all shadow-sm group">
+                        <span className="absolute inset-0 w-0 bg-blue-600 transition-all duration-300 ease-out group-hover:w-full"></span>
+                        <span className="relative flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                            عرض كل أجهزة آيفون <ChevronRight className="w-5 h-5 group-hover:translate-x-1 inline-block transition-transform duration-300" />
+                        </span>
+                    </Link>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {products.map((product, index) => (

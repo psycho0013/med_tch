@@ -6,6 +6,7 @@ import { useCurrency } from "./CurrencyContext";
 import { Tv, ChevronLeft, Star, MonitorPlay, Zap, RefreshCw } from "lucide-react";
 import SpecsModal from "./SpecsModal";
 import type { Product } from "@/lib/types";
+import Link from "next/link";
 
 export default function MonitorsSectionClient({ products }: { products: Product[] }) {
     const { formatPrice } = useCurrency();
@@ -21,7 +22,12 @@ export default function MonitorsSectionClient({ products }: { products: Product[
                         <h2 className="text-3xl lg:text-5xl font-black text-slate-900 mb-4 leading-tight">أفضل <span className="text-indigo-600">الشاشات</span> للقيمنق والمشاهدة</h2>
                         <p className="text-slate-600 font-medium text-lg">مهما كان استخدامك (التنافس، التختيم، المونتاج أو المشاهدة)، جمعنا لك أفضل شاشات السوق.</p>
                     </div>
-                    <button className="flex items-center justify-center gap-2 bg-slate-50 text-indigo-700 font-bold px-6 py-3 rounded-xl border border-indigo-100 hover:bg-indigo-50 hover:border-indigo-200 transition-all shadow-sm">عرض كل الشاشات <ChevronLeft className="w-5 h-5" /></button>
+                    <Link href="/category/monitors" className="relative overflow-hidden flex items-center justify-center gap-2 bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl border border-indigo-200 transition-all shadow-sm group">
+                        <span className="absolute inset-0 w-0 bg-indigo-600 transition-all duration-300 ease-out group-hover:w-full"></span>
+                        <span className="relative flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                            عرض كل الشاشات <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 inline-block transition-transform duration-300" />
+                        </span>
+                    </Link>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {products.map((product, index) => (

@@ -10,6 +10,8 @@ export default function HeroEditor() {
     const [badgeTitle, setBadgeTitle] = useState("أفضل سعر");
     const [badgeText, setBadgeText] = useState("-15% خصم");
     const [badgeVisible, setBadgeVisible] = useState(true);
+    const [heroImageUrl, setHeroImageUrl] = useState("");
+    const [heroIcon, setHeroIcon] = useState("");
 
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -26,6 +28,8 @@ export default function HeroEditor() {
                     if (data.badge_title !== undefined) setBadgeTitle(data.badge_title);
                     if (data.badge_text !== undefined) setBadgeText(data.badge_text);
                     if (data.badge_visible !== undefined) setBadgeVisible(data.badge_visible);
+                    if (data.hero_image_url) setHeroImageUrl(data.hero_image_url);
+                    if (data.hero_icon) setHeroIcon(data.hero_icon);
                 }
             })
             .finally(() => setLoading(false));
@@ -44,7 +48,9 @@ export default function HeroEditor() {
                     cta_text: ctaText,
                     badge_title: badgeTitle,
                     badge_text: badgeText,
-                    badge_visible: badgeVisible
+                    badge_visible: badgeVisible,
+                    hero_image_url: heroImageUrl,
+                    hero_icon: heroIcon
                 }),
             });
             setSaved(true);
@@ -95,6 +101,37 @@ export default function HeroEditor() {
                         type="text" value={ctaText} onChange={(e) => setCtaText(e.target.value)}
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-dark/20"
                     />
+                </div>
+
+                <div className="pt-6 border-t border-slate-100">
+                    <h3 className="font-bold text-slate-800 mb-4">شكل الشاشة الوهمية (Mockup)</h3>
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-bold text-slate-600 mb-1.5">رابط الصورة (اختياري)</label>
+                            <input
+                                type="text" value={heroImageUrl} onChange={(e) => setHeroImageUrl(e.target.value)}
+                                placeholder="مثال: /images/mockup.png"
+                                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-slate-600 mb-1.5">أو اختر أيقونة</label>
+                            <select
+                                value={heroIcon} onChange={(e) => setHeroIcon(e.target.value)}
+                                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20 bg-white"
+                            >
+                                <option value="">بدون أيقونة (شكل افتراضي)</option>
+                                <option value="Smartphone">موبايل (Smartphone)</option>
+                                <option value="Monitor">شاشة (Monitor)</option>
+                                <option value="Laptop">لابتوب (Laptop)</option>
+                                <option value="Tablet">تابلت (Tablet)</option>
+                                <option value="Watch">ساعة ذكية (Watch)</option>
+                                <option value="Headphones">سماعات (Headphones)</option>
+                                <option value="Speaker">سماعة مكبرة (Speaker)</option>
+                                <option value="Gamepad2">يد تحكم (Gamepad)</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="pt-6 border-t border-slate-100">
