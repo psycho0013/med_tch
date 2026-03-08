@@ -1,33 +1,15 @@
-import { Bot, webhookCallback, session, Context, SessionFlavor } from 'grammy';
+import { Bot, webhookCallback, Context } from 'grammy';
 import { Menu, MenuFlavor } from '@grammyjs/menu';
 import { supabase } from '@/lib/supabase';
 import type { ProductCategory } from '@/lib/types';
 
-// Define session data structure
-interface SessionData {
-    step: 'idle' | 'awaiting_rate' | 'awaiting_product_name' | 'awaiting_product_brand' | 'awaiting_product_price' | 'awaiting_product_features';
-    draftProduct: {
-        category?: ProductCategory;
-        name?: string;
-        brand?: string;
-        price_usd?: number;
-        features?: string[];
-        tag?: string;
-        bg_color?: string;
-        rating?: number;
-    };
-}
-
-// Flavor the context to include sessions and menus
-type MyContext = Context & SessionFlavor<SessionData> & MenuFlavor;
+// Flavor the context to include menus
+type MyContext = Context & MenuFlavor;
 
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const ADMIN_ID = process.env.TELEGRAM_ADMIN_ID;
 
 const bot = new Bot<MyContext>(BOT_TOKEN || "DUMMY_TOKEN");
-
-// Install session middleware
-bot.use(session({ initial: (): SessionData => ({ step: 'idle', draftProduct: {} }) }));
 
 // Auth middleware
 bot.use(async (ctx, next) => {
@@ -36,7 +18,7 @@ bot.use(async (ctx, next) => {
         return;
     }
     if (ctx.from?.id.toString() !== ADMIN_ID) {
-        await ctx.reply("عذراً، غير مصرح لك باستخدام هذا البوت. 🛑");
+        // Skip unauthorized access
         return;
     }
     await next();
@@ -45,20 +27,18 @@ bot.use(async (ctx, next) => {
 // Create menus
 const mainMenu = new Menu<MyContext>("main-menu")
     .text("💵 تحديث سعر الصرف", async (ctx) => {
-        ctx.session.step = 'awaiting_rate';
-        await ctx.reply("قم بإرسال سعر الصرف الجديد (مثلاً: 1520):");
-        await ctx.menu.close();
+        await ctx.reply("قم بإرسال سعر الصرف الجديد (مثلاً: 1520):", {
+            reply_markup: { force_reply: true }
+        });
+        await ctx.answerCallbackQuery();
     }).row()
-    .text("📱 إضافة منتج جديد", async (ctx) => {
-        ctx.session.step = 'idle';
-        ctx.session.draftProduct = {}; // Reset draft
+    .text("📱 إضافة منتج", async (ctx) => {
         await ctx.reply("اختر قسم المنتج الجديد:", { reply_markup: categoryMenu });
-        await ctx.menu.close();
+        await ctx.answerCallbackQuery();
     }).row()
     .text("❌ إلغاء", async (ctx) => {
-        ctx.session.step = 'idle';
-        await ctx.reply("تم الإلغاء.");
-        await ctx.menu.close();
+        await ctx.deleteMessage();
+        await ctx.answerCallbackQuery("تم الإلغاء");
     });
 
 const categoryMenu = new Menu<MyContext>("category-menu")
@@ -70,17 +50,18 @@ const categoryMenu = new Menu<MyContext>("category-menu")
     .text("ساعات آبل", (ctx) => handleCategorySelect(ctx, "apple-watches")).row()
     .text("ساعات أخرى", (ctx) => handleCategorySelect(ctx, "other-watches")).row()
     .text("إكسسوارات", (ctx) => handleCategorySelect(ctx, "accessories")).row()
-    .text("🔙 رجوع", async (ctx) => {
-        ctx.session.step = 'idle';
-        await ctx.reply("تم الإلغاء. يمكنك البدء من جديد عبر /start");
-        await ctx.menu.close();
+    .text("🔙 إلغاء", async (ctx) => {
+        await ctx.deleteMessage();
+        await ctx.answerCallbackQuery("تم الإلغاء");
     });
 
 async function handleCategorySelect(ctx: MyContext, category: ProductCategory) {
-    ctx.session.draftProduct.category = category;
-    ctx.session.step = 'awaiting_product_name';
-    await ctx.reply(`قمت باختيار: ${category}\n\nالآن، أرسل *اسم المنتج* (مثال: iPhone 15 Pro Max):`, { parse_mode: "Markdown" });
-    await ctx.menu.close();
+    await ctx.reply(`القسم: ${category}\n\nالآن، أرسل *اسم المنتج* (مثال: iPhone 15) كردّ على هذه الرسالة:`, {
+        parse_mode: "Markdown",
+        reply_markup: { force_reply: true }
+    });
+    // Remove the menu message
+    await ctx.deleteMessage();
 }
 
 bot.use(mainMenu);
@@ -88,7 +69,6 @@ bot.use(categoryMenu);
 
 // Command: /start
 bot.command("start", async (ctx) => {
-    ctx.session.step = 'idle';
     await ctx.reply(
         "أهلاً بك يا مدير النظام! 👋\n\nماذا تريد أن تفعل اليوم؟",
         { reply_markup: mainMenu }
@@ -98,86 +78,120 @@ bot.command("start", async (ctx) => {
 // Listener for text messages
 bot.on("message:text", async (ctx) => {
     const text = ctx.message.text.trim();
-    const step = ctx.session.step;
+    const replyTo = ctx.message.reply_to_message?.text;
 
     if (text.toLowerCase() === '/cancel' || text === 'الغاء' || text === 'إلغاء') {
-        ctx.session.step = 'idle';
         await ctx.reply("تم الإلغاء. اضغط /start للعودة للقائمة.");
         return;
     }
 
-    if (step === 'awaiting_rate') {
+    if (!replyTo) {
+        // Not a reply to a prompt. Ignore or show menu.
+        if (text !== "/start") {
+            await ctx.reply("استخدم أمر /start لفتح القائمة، أو انقر للرد (Reply) على رسائل البوت.");
+        }
+        return;
+    }
+
+    // 1. Awaiting Exchange Rate
+    if (replyTo.includes("سعر الصرف الجديد")) {
         const newRate = Number(text);
         if (isNaN(newRate) || newRate <= 0) {
-            await ctx.reply("❌ يرجى إرسال رقم صحيح وموجب.");
+            await ctx.reply("❌ رقم غير صحيح. انقر 'رد' على الرسالة السابقة وأرسل رقماً.", { reply_markup: { force_reply: true } });
             return;
         }
 
         try {
             const { error } = await supabase.from('site_settings').update({ exchange_rate: newRate }).eq('id', 1);
             if (error) throw error;
-            ctx.session.step = 'idle';
             await ctx.reply(`✅ تم تحديث سعر الصرف بنجاح!\nالسعر الجديد: ${newRate} د.ع`);
         } catch (err) {
+            await ctx.reply("❌ حدث خطأ أثناء التحديث.");
             console.error(err);
-            await ctx.reply("❌ حدث خطأ أثناء تحديث سعر الصرف.");
         }
         return;
     }
 
-    if (step === 'awaiting_product_name') {
-        ctx.session.draftProduct.name = text;
-        ctx.session.step = 'awaiting_product_brand';
-        await ctx.reply(`الاسم: ${text}\nالآن، أرسل *الشركة المصنعة* (مثال: Apple, Samsung):`, { parse_mode: "Markdown" });
+    // 2. Awaiting Product Name
+    if (replyTo.includes("القسم:") && replyTo.includes("اسم المنتج")) {
+        const categoryMatch = replyTo.match(/القسم: (\S+)/);
+        const category = categoryMatch ? categoryMatch[1] : "android";
+
+        await ctx.reply(`القسم: ${category}\nالاسم: ${text}\n\nالآن، أرسل *الشركة المصنعة* كردّ على هذه الرسالة:`, {
+            parse_mode: "Markdown",
+            reply_markup: { force_reply: true }
+        });
         return;
     }
 
-    if (step === 'awaiting_product_brand') {
-        ctx.session.draftProduct.brand = text;
-        ctx.session.step = 'awaiting_product_price';
-        await ctx.reply(`الشركة: ${text}\nالآن، أرسل *السعر بالدولار USD* كـ رقم فقط (مثال: 1200):`, { parse_mode: "Markdown" });
+    // 3. Awaiting Product Brand
+    if (replyTo.includes("الاسم:") && replyTo.includes("الشركة المصنعة")) {
+        const categoryMatch = replyTo.match(/القسم: (\S+)/);
+        const nameMatch = replyTo.match(/الاسم: (.+)/);
+        const category = categoryMatch ? categoryMatch[1] : "android";
+        const name = nameMatch ? nameMatch[1].trim() : "Unknown";
+
+        await ctx.reply(`القسم: ${category}\nالاسم: ${name}\nالشركة: ${text}\n\nالآن، أرسل *السعر بالدولار USD* كـ رقم فقط (مثال: 1200) كردّ على هذه الرسالة:`, {
+            parse_mode: "Markdown",
+            reply_markup: { force_reply: true }
+        });
         return;
     }
 
-    if (step === 'awaiting_product_price') {
+    // 4. Awaiting Product Price
+    if (replyTo.includes("الشركة:") && replyTo.includes("السعر بالدولار")) {
+        const categoryMatch = replyTo.match(/القسم: (\S+)/);
+        const nameMatch = replyTo.match(/الاسم: (.+)/);
+        const brandMatch = replyTo.match(/الشركة: (.+)/);
+
+        const category = categoryMatch ? categoryMatch[1] : "android";
+        const name = nameMatch ? nameMatch[1].trim() : "Unknown";
+        const brand = brandMatch ? brandMatch[1].trim() : "Unknown";
+
         const price = Number(text);
         if (isNaN(price) || price <= 0) {
-            await ctx.reply("❌ يرجى إرسال السعر كرقم صحيح (مثال: 999)");
+            await ctx.reply(`القسم: ${category}\nالاسم: ${name}\nالشركة: ${brand}\n\n❌ يرجى إرسال السعر كرقم صحيح كردّ على هذه الرسالة:`, {
+                parse_mode: "Markdown",
+                reply_markup: { force_reply: true }
+            });
             return;
         }
-        ctx.session.draftProduct.price_usd = price;
-        ctx.session.step = 'awaiting_product_features';
-        await ctx.reply(`السعر: $${price}\nالآن أرسل *أهم الميزات* مفصولة بفاصلة أو شرطة (مثال: كاميرا 48MP - بطارية 5000mAh - شاشة 120Hz):`, { parse_mode: "Markdown" });
+
+        await ctx.reply(`القسم: ${category}\nالاسم: ${name}\nالشركة: ${brand}\nالسعر: $${price}\n\nأرسل *أهم الميزات* مفصولة بفاصلة أو شرطة (مثال: كاميرا 48MP - شاشة 120Hz) كردّ:`, {
+            parse_mode: "Markdown",
+            reply_markup: { force_reply: true }
+        });
         return;
     }
 
-    if (step === 'awaiting_product_features') {
-        // Parse features
+    // 5. Awaiting Product Features -> Final Save
+    if (replyTo.includes("السعر:") && replyTo.includes("أهم الميزات")) {
+        const categoryMatch = replyTo.match(/القسم: (\S+)/);
+        const nameMatch = replyTo.match(/الاسم: (.+)/);
+        const brandMatch = replyTo.match(/الشركة: (.+)/);
+        const priceMatch = replyTo.match(/السعر: \$([0-9.]+)/);
+
+        const category = categoryMatch ? categoryMatch[1] : "android";
+        const name = nameMatch ? nameMatch[1].trim() : "Unknown";
+        const brand = brandMatch ? brandMatch[1].trim() : "Unknown";
+        const price_usd = priceMatch ? Number(priceMatch[1]) : 0;
         const features = text.split(/[-،,]/).map(f => f.trim()).filter(f => f.length > 0);
-        ctx.session.draftProduct.features = features;
-
-        // Setup some defaults before saving
-        ctx.session.draftProduct.bg_color = 'bg-slate-100'; // Default background
-        ctx.session.draftProduct.rating = 5.0; // Default rating
-        ctx.session.draftProduct.tag = 'جديد'; // Default tag
-
-        const product = ctx.session.draftProduct;
 
         try {
-            await ctx.reply("⏳ جاري حفظ المنتج في قاعدة البيانات...");
+            await ctx.reply("⏳ جاري إنشاء المنتج...");
 
             const { data, error } = await supabase
                 .from('products')
                 .insert([{
-                    category: product.category,
-                    name: product.name,
-                    brand: product.brand,
-                    price_usd: product.price_usd,
-                    price_iqd: (product.price_usd || 0) * 1500, // Will be overridden dynamically by context but needs a value
-                    features: product.features,
-                    bg_color: product.bg_color,
-                    rating: product.rating,
-                    tag: product.tag,
+                    category: category,
+                    name: name,
+                    brand: brand,
+                    price_usd: price_usd,
+                    price_iqd: price_usd * 1500, // Fallback conversion
+                    features: features,
+                    bg_color: 'bg-slate-100', // Default
+                    rating: 5.0, // Default
+                    tag: 'جديد', // Default
                     is_offer: false,
                     full_specs: {} // empty object for now
                 }])
@@ -186,24 +200,25 @@ bot.on("message:text", async (ctx) => {
 
             if (error) throw error;
 
-            ctx.session.step = 'idle';
-            ctx.session.draftProduct = {};
-
-            await ctx.reply(`✅ تم إضافة المنتج بنجاح!\n\n📱 *${data.name}*\n🏷️ ${data.brand}\n💵 $${data.price_usd}\n\nاضغط /start للعودة للقائمة.`, { parse_mode: "Markdown" });
+            await ctx.reply(`✅ تم إضافة المنتج بنجاح!\n\n📱 *${data.name}*\n🏷️ ${data.brand}\n💵 $${data.price_usd}\n\nالآن أصبح المنتج متاحاً على موقعك!`, { parse_mode: "Markdown" });
 
         } catch (err) {
             console.error("Supabase insert error:", err);
-            await ctx.reply("❌ حدث خطأ أثناء حفظ المنتج. الرجاء المحاولة لاحقاً.");
-            ctx.session.step = 'idle';
+            await ctx.reply("❌ حدث خطأ أثناء حفظ المنتج في قاعدة البيانات.");
         }
         return;
     }
-
-    // Fallback if idle and text is sent
-    if (step === 'idle') {
-        await ctx.reply("لتحديث السعر أو إضافة منتج، يرجى استخدام أمر /start وإتباع القائمة.");
-    }
 });
 
-// Export the webhook handler for Next.js app router
-export const POST = webhookCallback(bot, 'std/http');
+// Using a custom POST handler ensures Vercel waits for Webhook processing.
+export const POST = async (req: Request) => {
+    try {
+        const update = await req.json();
+        await bot.handleUpdate(update);
+        return new Response("OK", { status: 200 });
+    } catch (err) {
+        console.error("Webhook processing error:", err);
+        // Do not crash the server to prevent Telegram from retrying infinitely
+        return new Response("OK", { status: 200 });
+    }
+};
