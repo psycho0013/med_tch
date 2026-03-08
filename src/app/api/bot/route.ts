@@ -211,14 +211,8 @@ bot.on("message:text", async (ctx) => {
 });
 
 // Using a custom POST handler ensures Vercel waits for Webhook processing.
-export const POST = async (req: Request) => {
-    try {
-        const update = await req.json();
-        await bot.handleUpdate(update);
-        return new Response("OK", { status: 200 });
-    } catch (err) {
-        console.error("Webhook processing error:", err);
-        // Do not crash the server to prevent Telegram from retrying infinitely
-        return new Response("OK", { status: 200 });
-    }
-};
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
+// Using grammy's built-in standard http adapter for Next.js App Router
+export const POST = webhookCallback(bot, 'std/http');
