@@ -32,9 +32,8 @@ const mainMenu = new Menu<MyContext>("main-menu")
         });
         await ctx.answerCallbackQuery();
     }).row()
-    .text("📱 إضافة منتج", async (ctx) => {
-        await ctx.reply("اختر قسم المنتج الجديد:", { reply_markup: categoryMenu });
-        await ctx.answerCallbackQuery();
+    .text("📱 إضافة منتج", (ctx) => {
+        ctx.menu.nav("category-menu");
     }).row()
     .text("❌ إلغاء", async (ctx) => {
         await ctx.deleteMessage();
@@ -60,12 +59,12 @@ async function handleCategorySelect(ctx: MyContext, category: ProductCategory) {
         parse_mode: "Markdown",
         reply_markup: { force_reply: true }
     });
-    // Remove the menu message
-    await ctx.deleteMessage();
+    // Close the original menu
+    await ctx.menu.close();
 }
 
+mainMenu.register(categoryMenu);
 bot.use(mainMenu);
-bot.use(categoryMenu);
 
 // Command: /start
 bot.command("start", async (ctx) => {
