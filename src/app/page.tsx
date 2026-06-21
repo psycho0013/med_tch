@@ -6,14 +6,17 @@ import PCsSection from "@/components/PCsSection";
 import MonitorsSection from "@/components/MonitorsSection";
 import AccessoriesSection from "@/components/AccessoriesSection";
 import Footer from "@/components/Footer";
+import { getHeroContent } from "@/lib/data";
 
-export default function Home() {
+export default async function Home() {
+  const heroContent = await getHeroContent();
+
   return (
     <div className="min-h-screen flex flex-col relative font-sans">
       <Navbar />
 
       <main className="flex-1">
-        <AppleBanner />
+        <AppleBanner initialData={heroContent} />
 
         {/* Subtle separator */}
         <div className="max-w-7xl mx-auto px-8 w-full">

@@ -1,15 +1,21 @@
-import Link from "next/link";
-import { supabase } from "@/lib/supabase";
+"use client";
 
-export default async function Footer() {
-    let logoUrl = null;
-    try {
-        const { data } = await supabase.from("site_settings").select("description").eq("id", 1).single();
-        if (data && data.description) {
-            const parsed = JSON.parse(data.description);
-            if (parsed && parsed.logo) logoUrl = parsed.logo;
-        }
-    } catch (e) {}
+import { useState, useEffect } from "react";
+import Link from "next/link";
+
+export default function Footer() {
+    const [logoUrl, setLogoUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        fetch("/api/settings")
+            .then((res) => res.json())
+            .then((data) => {
+                if (data && data.logo_url) {
+                    setLogoUrl(data.logo_url);
+                }
+            })
+            .catch(() => {});
+    }, []);
 
     return (
         <footer className="bg-slate-100/50 text-slate-600 border-t border-slate-200 mt-20 relative overflow-hidden glass-panel font-sans pb-8">

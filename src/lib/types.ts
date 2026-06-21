@@ -26,6 +26,14 @@ export interface HeroContent {
     title: string;
     subtitle: string;
     cta_text: string;
+    cta_link?: string;
+    secondary_cta_text?: string;
+    secondary_cta_link?: string;
+    badge_title?: string;
+    badge_text?: string;
+    badge_visible?: boolean;
+    hero_image_url?: string;
+    hero_icon?: string;
 }
 
 // ===== Site Settings =====

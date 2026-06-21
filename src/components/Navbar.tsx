@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { default as NextLink } from "next/link";
-import { Menu, X, User, Monitor, Tv, Mouse, ArrowRightLeft, ShoppingCart, Heart, Smartphone } from "lucide-react";
+import { Menu, X, User, Monitor, Tv, Mouse, ArrowRightLeft, ShoppingCart, Heart, Smartphone, Home } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LoginModal from "./LoginModal";
 import { useCurrency } from "./CurrencyContext";
@@ -37,6 +37,7 @@ export default function Navbar() {
     };
 
     const navLinks = [
+        { name: "الرئيسية", href: "/", icon: <Home className="w-4 h-4" /> },
         { name: "تجميعات PC", href: "/#pc", icon: <Monitor className="w-4 h-4" /> },
         { name: "شاشات", href: "/#monitors", icon: <Tv className="w-4 h-4" /> },
         { name: "قطع وإكسسوارات", href: "/#accessories", icon: <Mouse className="w-4 h-4" /> },
@@ -62,28 +63,28 @@ export default function Navbar() {
                     </div>
 
                     {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center gap-8">
-                        <div className="flex items-center gap-6">
+                    <div className="hidden md:flex items-center gap-4 lg:gap-8 shrink-0">
+                        <div className="flex items-center gap-3 lg:gap-6 shrink-0">
                             {partnerUrl && (
-                                <a href={partnerUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-brand-light/10 hover:bg-brand-light/20 text-brand-dark font-bold text-sm transition-colors border border-brand-light/20 shadow-sm ml-2">
+                                <a href={partnerUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-brand-light/10 hover:bg-brand-light/20 text-brand-dark font-bold text-sm transition-colors border border-brand-light/20 shadow-sm ml-2 whitespace-nowrap shrink-0">
                                     <Smartphone className="w-5 h-5" />
-                                    <span>{partnerName || "موقع الهواتف"}</span>
+                                    <span className="whitespace-nowrap">{partnerName || "موقع الهواتف"}</span>
                                 </a>
                             )}
                             {navLinks.map((link) => (
                                 <NextLink
                                     key={link.name}
                                     href={link.href}
-                                    className="flex items-center gap-2 text-slate-600 hover:text-brand-dark transition-colors font-medium relative group"
+                                    className="flex items-center gap-1.5 lg:gap-2 text-slate-600 hover:text-brand-dark transition-colors font-medium relative group whitespace-nowrap shrink-0 text-sm lg:text-base"
                                 >
                                     {link.icon}
-                                    {link.name}
+                                    <span>{link.name}</span>
                                     <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-brand-light transition-all duration-300 group-hover:w-full"></span>
                                 </NextLink>
                             ))}
                         </div>
 
-                        <div className="flex items-center gap-4 border-r border-slate-200 pr-4">
+                        <div className="flex items-center gap-3 lg:gap-4 border-r border-slate-200 pr-3 lg:pr-4 shrink-0">
                             <button
                                 onClick={toggleCurrency}
                                 className="flex items-center justify-between w-20 h-9 bg-slate-100 rounded-full p-1 relative shadow-inner cursor-pointer"
@@ -127,12 +128,6 @@ export default function Navbar() {
 
                     {/* Icons and Mobile Menu */}
                     <div className="flex items-center gap-2 md:hidden">
-                        {partnerUrl && (
-                            <a href={partnerUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full bg-brand-light/10 hover:bg-brand-light/20 text-brand-dark transition-colors border border-brand-light/20 shadow-sm">
-                                <Smartphone className="w-5 h-5" />
-                            </a>
-                        )}
-
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             className="text-slate-600 hover:text-brand-dark p-2"
@@ -153,6 +148,18 @@ export default function Navbar() {
                         className="md:hidden glass-panel border-t border-white/20"
                     >
                         <div className="px-4 pt-2 pb-6 space-y-1">
+                            {partnerUrl && (
+                                <a
+                                    href={partnerUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 px-3 py-3 rounded-xl bg-brand-light/10 text-brand-dark border border-brand-light/20 hover:bg-brand-light/20 transition-all duration-300 font-bold mb-2"
+                                >
+                                    <Smartphone className="w-5 h-5 shrink-0 text-brand-dark" />
+                                    <span>{partnerName || "موقع الهواتف"}</span>
+                                </a>
+                            )}
+
                             {navLinks.map((link) => (
                                 <NextLink
                                     key={link.name}

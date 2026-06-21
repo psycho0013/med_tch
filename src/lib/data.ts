@@ -16,19 +16,18 @@ export async function getProductsByCategory(category: ProductCategory): Promise<
     return data || [];
 }
 
-export async function getHeroContent(): Promise<HeroContent | null> {
+export async function getHeroContent(): Promise<HeroContent[]> {
     const { data, error } = await supabase
         .from("hero_content")
         .select("*")
-        .eq("id", 1)
-        .single();
+        .order("id", { ascending: true });
 
     if (error) {
         console.error("Error fetching hero content:", error.message);
-        return null;
+        return [];
     }
 
-    return data;
+    return data || [];
 }
 
 export async function getSiteSettings(): Promise<SiteSettings | null> {
