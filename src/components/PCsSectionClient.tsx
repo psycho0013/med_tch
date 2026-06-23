@@ -61,16 +61,22 @@ export default function PCsSectionClient({ products }: { products: Product[] }) 
                                 >
                                     <Heart fill={isFavorite(product.id) ? "currentColor" : "none"} className={isFavorite(product.id) ? "text-red-500 w-5 h-5" : "w-5 h-5"} />
                                 </button>
-                                <div className="mb-6 h-32 flex items-center justify-center mt-4">
-                                    <div className="w-24 h-32 bg-slate-50 rounded-lg border-2 border-slate-200 shadow-[0_0_20px_rgba(168,85,247,0.1)] group-hover:shadow-[0_0_40px_rgba(168,85,247,0.2)] transition-all flex flex-col justify-between p-2">
-                                        <div className="w-full flex justify-between">
-                                            <div className="w-5 h-5 rounded-full bg-purple-500/20 animate-pulse border border-purple-500/50" />
-                                            <div className="w-5 h-5 rounded-full bg-blue-500/20 animate-pulse border border-blue-500/50 delay-75" />
+                                <div className="mb-6 h-56 flex items-center justify-center mt-4">
+                                    {product.image_url ? (
+                                        <div className="w-full h-full relative flex items-center justify-center">
+                                            <img src={product.image_url} alt={product.name} className="max-h-full max-w-full object-contain drop-shadow-lg group-hover:scale-110 transition-transform duration-500 mix-blend-multiply" />
                                         </div>
-                                        <div className="w-full h-1/2 bg-slate-100 rounded-md border border-slate-200 flex items-center justify-center overflow-hidden">
-                                            <div className="w-full h-2 bg-gradient-to-r from-red-500 via-green-500 to-blue-500 opacity-40 animate-pulse" />
+                                    ) : (
+                                        <div className="w-24 h-32 bg-slate-50 rounded-lg border-2 border-slate-200 shadow-[0_0_20px_rgba(168,85,247,0.1)] group-hover:shadow-[0_0_40px_rgba(168,85,247,0.2)] transition-all flex flex-col justify-between p-2">
+                                            <div className="w-full flex justify-between">
+                                                <div className="w-5 h-5 rounded-full bg-purple-500/20 animate-pulse border border-purple-500/50" />
+                                                <div className="w-5 h-5 rounded-full bg-blue-500/20 animate-pulse border border-blue-500/50 delay-75" />
+                                            </div>
+                                            <div className="w-full h-1/2 bg-slate-100 rounded-md border border-slate-200 flex items-center justify-center overflow-hidden">
+                                                <div className="w-full h-2 bg-gradient-to-r from-red-500 via-green-500 to-blue-500 opacity-40 animate-pulse" />
+                                            </div>
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-800 mb-1 group-hover:text-purple-700 transition-colors">{product.name}</h3>
                                 <p className="text-sm text-slate-500 font-medium mb-6">فئة {product.type || ''}</p>

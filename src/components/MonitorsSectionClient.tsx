@@ -59,12 +59,18 @@ export default function MonitorsSectionClient({ products }: { products: Product[
                                 <Heart fill={isFavorite(product.id) ? "currentColor" : "none"} className={isFavorite(product.id) ? "text-red-500 w-4 h-4" : "w-4 h-4"} />
                             </button>
                             <div className={`w-full aspect-[4/3] rounded-2xl ${product.bg_color} mb-6 flex flex-col items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-500 mt-2`}>
-                                <div className="absolute bottom-4 w-28 h-2 bg-slate-400 rounded-full shadow-lg"></div>
-                                <div className="absolute bottom-6 w-4 h-12 bg-slate-500 rounded-t-lg"></div>
-                                <div className="w-4/5 aspect-video max-w-[85%] bg-black rounded-lg shadow-2xl border-4 border-slate-300 flex items-center justify-center z-10 relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
-                                    <div className="text-white/30 font-black text-xl tracking-wider">{product.brand}</div>
-                                </div>
+                                {product.image_url ? (
+                                    <img src={product.image_url} alt={product.name} className="w-full h-full object-contain p-4 drop-shadow-xl mix-blend-multiply" />
+                                ) : (
+                                    <>
+                                        <div className="absolute bottom-4 w-28 h-2 bg-slate-400 rounded-full shadow-lg"></div>
+                                        <div className="absolute bottom-6 w-4 h-12 bg-slate-500 rounded-t-lg"></div>
+                                        <div className="w-4/5 aspect-video max-w-[85%] bg-black rounded-lg shadow-2xl border-4 border-slate-300 flex items-center justify-center z-10 relative overflow-hidden">
+                                            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+                                            <div className="text-white/30 font-black text-xl tracking-wider">{product.brand}</div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                             <div className="flex-1 flex flex-col">
                                 <div className="flex justify-between items-start mb-3">

@@ -72,8 +72,14 @@ export default function AccessoriesSectionClient({ products }: { products: Produ
                                     <Heart fill={isFavorite(product.id) ? "currentColor" : "none"} className={isFavorite(product.id) ? "text-red-500 w-4 h-4" : "w-4 h-4"} />
                                 </button>
                                 <div className={`w-full aspect-square rounded-2xl ${product.bg_color} mb-6 flex flex-col items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-500 mt-2`}>
-                                    <div className="absolute inset-0 flex items-center justify-center"><IconComponent className="w-24 h-24 text-slate-900/10" /></div>
-                                    <div className="bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl text-slate-900 font-black shadow-lg border border-white/50 z-10">{product.brand}</div>
+                                    {product.image_url ? (
+                                        <img src={product.image_url} alt={product.name} className="w-full h-full object-contain p-4 drop-shadow-xl mix-blend-multiply" />
+                                    ) : (
+                                        <>
+                                            <div className="absolute inset-0 flex items-center justify-center"><IconComponent className="w-24 h-24 text-slate-900/10" /></div>
+                                            <div className="bg-white/80 backdrop-blur-md px-4 py-2 rounded-xl text-slate-900 font-black shadow-lg border border-white/50 z-10">{product.brand}</div>
+                                        </>
+                                    )}
                                 </div>
                                 <div className="flex-1 flex flex-col">
                                     <div className="flex justify-between items-start mb-3">
