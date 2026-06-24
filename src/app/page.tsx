@@ -20,7 +20,7 @@ export default async function Home() {
 
         {/* Subtle separator */}
         <div className="max-w-7xl mx-auto px-8 w-full">
-          <div className="h-px w-full bg-slate-200" />
+          <div className="h-px w-full bg-white/5" />
         </div>
 
         {/* Product Sections */}
@@ -28,14 +28,14 @@ export default async function Home() {
         
         {/* Subtle separator */}
         <div className="max-w-4xl mx-auto px-8 w-full py-8">
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         </div>
 
         <MonitorsSection />
         
         {/* Subtle separator */}
         <div className="max-w-4xl mx-auto px-8 w-full py-8">
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         </div>
 
         <AccessoriesSection />

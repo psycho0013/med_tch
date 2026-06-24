@@ -167,34 +167,34 @@ export default function ProductForm({ category, existingProduct, onSuccess, onCa
         <div>
             {/* Header */}
             <div className="flex items-center gap-4 mb-8">
-                <button onClick={onCancel} className="p-2 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-100">
+                <button onClick={onCancel} className="p-2 rounded-xl border border-white/10 text-zinc-400 hover:bg-white/5">
                     <ArrowRight className="w-5 h-5" />
                 </button>
-                <h2 className="text-2xl font-black text-slate-900">
+                <h2 className="text-2xl font-black text-white">
                     {isEdit ? `تعديل: ${existingProduct.name}` : `إضافة منتج جديد`}
                 </h2>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl">
                 {/* Basic Info */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-5 shadow-sm">
-                    <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
-                        <Box className="w-5 h-5 text-brand-dark" /> المعلومات الأساسية
+                <div className="bg-[#0a0a0a] rounded-2xl border border-white/10 p-6 space-y-5 shadow-sm">
+                    <h3 className="text-lg font-bold text-white border-b border-white/10 pb-3 flex items-center gap-2">
+                        <Box className="w-5 h-5 text-brand-light" /> المعلومات الأساسية
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <Field label="الاسم" value={name} onChange={setName} required placeholder="مثال: اسم المنتج أو التجميعة" />
                         <Field label="العلامة التجارية" value={brand} onChange={setBrand} required placeholder="مثال: Custom Build, ASUS, الخ" />
                         <Field label="السعر (USD)" value={priceUSD} onChange={(v) => setPriceUSD(Number(v))} type="number" required />
                         <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-1.5 flex items-center gap-1.5">
-                                <Calculator className="w-4 h-4 text-emerald-600" />
+                            <label className="block text-sm font-bold text-zinc-400 mb-1.5 flex items-center gap-1.5">
+                                <Calculator className="w-4 h-4 text-emerald-500" />
                                 السعر (IQD) - محسوب تلقائياً
                             </label>
                             <input
                                 type="text"
                                 value={(priceUSD * (exchangeRate / 100)).toLocaleString() + " د.ع"}
                                 disabled
-                                className="w-full px-4 py-2.5 rounded-xl border border-emerald-100 bg-emerald-50/50 text-emerald-800 font-bold text-sm focus:outline-none cursor-not-allowed"
+                                className="w-full px-4 py-2.5 rounded-xl border border-emerald-900/30 bg-emerald-900/10 text-emerald-400 font-bold text-sm focus:outline-none cursor-not-allowed"
                             />
                         </div>
                         <Field label="التقييم (من 5)" value={rating} onChange={(v) => setRating(Number(v))} type="number" step="0.1" />
@@ -205,29 +205,29 @@ export default function ProductForm({ category, existingProduct, onSuccess, onCa
 
                     {/* Image Upload Section */}
                     <div className="pt-2">
-                        <label className="block text-sm font-bold text-slate-600 mb-1.5 flex items-center gap-1.5">
-                            <ImageIcon className="w-4 h-4 text-blue-500" /> صورة المنتج (يتم ضغطها تلقائياً لتوفير المساحة)
+                        <label className="block text-sm font-bold text-zinc-400 mb-1.5 flex items-center gap-1.5">
+                            <ImageIcon className="w-4 h-4 text-brand-light" /> صورة المنتج (يتم ضغطها تلقائياً لتوفير المساحة)
                         </label>
                         <div className="flex items-center gap-4">
                             <label className="relative cursor-pointer flex-1">
-                                <div className="w-full px-4 py-3 rounded-xl border-2 border-dashed border-slate-300 hover:border-brand-dark hover:bg-brand-dark/5 transition-colors flex items-center justify-center gap-2">
+                                <div className="w-full px-4 py-3 rounded-xl border-2 border-dashed border-white/20 hover:border-brand-light/50 hover:bg-brand-light/5 transition-colors flex items-center justify-center gap-2">
                                     {uploadingImage ? (
                                         <>
-                                            <Loader2 className="w-5 h-5 text-brand-dark animate-spin" />
-                                            <span className="text-sm font-bold text-brand-dark">جاري الضغط والرفع...</span>
+                                            <Loader2 className="w-5 h-5 text-brand-light animate-spin" />
+                                            <span className="text-sm font-bold text-brand-light">جاري الضغط والرفع...</span>
                                         </>
                                     ) : (
                                         <>
-                                            <Upload className="w-5 h-5 text-slate-500" />
-                                            <span className="text-sm font-bold text-slate-600">اختر صورة من جهازك</span>
+                                            <Upload className="w-5 h-5 text-zinc-500" />
+                                            <span className="text-sm font-bold text-zinc-400">اختر صورة من جهازك</span>
                                         </>
                                     )}
                                 </div>
                                 <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={uploadingImage} />
                             </label>
                             {imageUrl && (
-                                <div className="w-14 h-14 rounded-xl border border-slate-200 overflow-hidden bg-slate-50 shrink-0">
-                                    <img src={imageUrl} alt="Preview" className="w-full h-full object-contain" />
+                                <div className="w-14 h-14 rounded-xl border border-white/10 overflow-hidden bg-white/5 shrink-0">
+                                    <img src={imageUrl} alt="Preview" className="w-full h-full object-contain p-1" />
                                 </div>
                             )}
                         </div>
@@ -237,25 +237,25 @@ export default function ProductForm({ category, existingProduct, onSuccess, onCa
                     </div>
 
                     {/* Offer Toggle */}
-                    <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
+                    <div className="flex items-center gap-4 pt-2 border-t border-white/10">
                         <label className="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" checked={isOffer} onChange={(e) => setIsOffer(e.target.checked)} className="w-5 h-5 rounded accent-brand-dark" />
-                            <span className="font-bold text-slate-700 text-sm">هل المنتج ضمن عرض خاص؟</span>
+                            <input type="checkbox" checked={isOffer} onChange={(e) => setIsOffer(e.target.checked)} className="w-5 h-5 rounded accent-brand-light" />
+                            <span className="font-bold text-white text-sm">هل المنتج ضمن عرض خاص؟</span>
                         </label>
                         {isOffer && (
                             <input
                                 type="text" placeholder="مثال: خصم 50$ لفترة محدودة" value={offerDiscount}
                                 onChange={(e) => setOfferDiscount(e.target.value)}
-                                className="flex-1 px-4 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20"
+                                className="flex-1 px-4 py-2 rounded-xl border border-white/10 bg-[#000000] text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-light/30"
                             />
                         )}
                     </div>
                 </div>
 
                 {/* Specs Section (Conditional) */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-sm border-t-4 border-t-brand-dark">
-                    <h3 className="text-xl font-black text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
-                        {isPC ? <Cpu className="w-6 h-6 text-brand-dark" /> : <HardDrive className="w-6 h-6 text-brand-dark" />}
+                <div className="bg-[#0a0a0a] rounded-2xl border border-white/10 p-6 space-y-6 shadow-sm border-t-4 border-t-brand-light">
+                    <h3 className="text-xl font-black text-white border-b border-white/10 pb-3 flex items-center gap-2">
+                        {isPC ? <Cpu className="w-6 h-6 text-brand-light" /> : <HardDrive className="w-6 h-6 text-brand-light" />}
                         {isPC ? "مواصفات القطع (PC Specs)" : "المواصفات التفصيلية"}
                     </h3>
 
@@ -277,22 +277,22 @@ export default function ProductForm({ category, existingProduct, onSuccess, onCa
                                     <input
                                         type="text" value={spec.key} onChange={(e) => updateGenericSpec(i, "key", e.target.value)}
                                         placeholder="اسم المواصفة (مثال: الشاشة)"
-                                        className="w-1/3 px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20"
+                                        className="w-1/3 px-4 py-2.5 rounded-xl border border-white/10 bg-[#000000] text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-light/30"
                                     />
                                     <textarea
                                         value={spec.value} onChange={(e) => updateGenericSpec(i, "value", e.target.value)}
                                         placeholder="تفاصيل المواصفة"
                                         rows={2}
-                                        className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20 resize-none"
+                                        className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 bg-[#000000] text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-light/30 resize-none"
                                     />
                                     {genericSpecs.length > 1 && (
-                                        <button type="button" onClick={() => removeGenericSpec(i)} className="p-2 text-red-400 hover:text-red-600 mt-1 bg-red-50 rounded-lg">
+                                        <button type="button" onClick={() => removeGenericSpec(i)} className="p-2 text-red-400 hover:text-red-300 mt-1 bg-red-500/10 rounded-lg">
                                             <Trash2 className="w-4 h-4" />
                                         </button>
                                     )}
                                 </div>
                             ))}
-                            <button type="button" onClick={addGenericSpec} className="flex items-center gap-1 text-brand-dark font-bold text-sm hover:underline w-fit mt-2">
+                            <button type="button" onClick={addGenericSpec} className="flex items-center gap-1 text-brand-light font-bold text-sm hover:underline w-fit mt-2">
                                 <Plus className="w-4 h-4" /> إضافة مواصفة
                             </button>
                         </div>
@@ -300,8 +300,8 @@ export default function ProductForm({ category, existingProduct, onSuccess, onCa
                 </div>
 
                 {/* Features */}
-                <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 shadow-sm">
-                    <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+                <div className="bg-[#0a0a0a] rounded-2xl border border-white/10 p-6 space-y-4 shadow-sm">
+                    <h3 className="text-lg font-bold text-white border-b border-white/10 pb-3 flex items-center gap-2">
                         <Zap className="w-5 h-5 text-amber-500" /> نقاط القوة (أسباب الشراء)
                     </h3>
                     {features.map((feat, i) => (
@@ -309,26 +309,26 @@ export default function ProductForm({ category, existingProduct, onSuccess, onCa
                             <input
                                 type="text" value={feat} onChange={(e) => updateFeature(i, e.target.value)}
                                 placeholder={`النقطة ${i + 1} (مثال: أداء ممتاز لألعاب 2K)`}
-                                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20"
+                                className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 bg-[#000000] text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-light/30"
                             />
                             {features.length > 1 && (
-                                <button type="button" onClick={() => removeFeature(i)} className="p-2 text-red-400 hover:text-red-600 bg-red-50 rounded-lg">
+                                <button type="button" onClick={() => removeFeature(i)} className="p-2 text-red-400 hover:text-red-300 bg-red-500/10 rounded-lg">
                                     <Trash2 className="w-4 h-4" />
                                 </button>
                             )}
                         </div>
                     ))}
-                    <button type="button" onClick={addFeature} className="flex items-center gap-1 text-brand-dark font-bold text-sm hover:underline w-fit mt-2">
+                    <button type="button" onClick={addFeature} className="flex items-center gap-1 text-brand-light font-bold text-sm hover:underline w-fit mt-2">
                         <Plus className="w-4 h-4" /> إضافة نقطة إضافية
                     </button>
                 </div>
 
                 {/* Submit */}
                 <div className="flex justify-end gap-3 pb-12">
-                    <button type="button" onClick={onCancel} className="px-6 py-3 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-100 transition-colors">
+                    <button type="button" onClick={onCancel} className="px-6 py-3 rounded-xl border border-white/10 text-zinc-400 font-bold text-sm hover:bg-white/5 transition-colors">
                         إلغاء الرجوع للوحة
                     </button>
-                    <button type="submit" disabled={saving || uploadingImage || !name || !brand} className="flex items-center gap-2 px-10 py-3 rounded-xl bg-brand-dark text-white font-bold text-sm hover:opacity-90 disabled:opacity-50 shadow-lg shadow-brand-dark/20 transition-all hover:-translate-y-0.5">
+                    <button type="submit" disabled={saving || uploadingImage || !name || !brand} className="flex items-center gap-2 px-10 py-3 rounded-xl bg-white text-black font-bold text-sm hover:bg-zinc-200 disabled:opacity-50 shadow-lg shadow-white/10 transition-all hover:-translate-y-0.5">
                         {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                         {isEdit ? "حفظ التعديلات" : "نشر المنتج الآن"}
                     </button>
@@ -345,11 +345,11 @@ function Field({ label, value, onChange, type = "text", placeholder, required, s
 }) {
     return (
         <div>
-            <label className="block text-sm font-bold text-slate-600 mb-1.5">{label}</label>
+            <label className="block text-sm font-bold text-zinc-400 mb-1.5">{label}</label>
             <input
                 type={type} value={value} onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder} required={required} step={step} dir={dir}
-                className={`w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-dark/20 focus:border-brand-dark ${dir === 'ltr' ? 'text-left' : ''}`}
+                className={`w-full px-4 py-2.5 rounded-xl border border-white/10 bg-[#000000] text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-light/30 focus:border-brand-light/50 ${dir === 'ltr' ? 'text-left' : ''}`}
             />
         </div>
     );
@@ -361,13 +361,13 @@ function SpecField({ label, value, onChange, placeholder, icon }: {
 }) {
     return (
         <div>
-            <label className="text-sm font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                <span className="text-slate-400">{icon}</span> {label}
+            <label className="text-sm font-bold text-zinc-300 mb-1.5 flex items-center gap-1.5">
+                <span className="text-zinc-500">{icon}</span> {label}
             </label>
             <input
                 type="text" value={value} onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder} dir="ltr"
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-dark/20 focus:border-brand-dark text-left bg-slate-50 focus:bg-white transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl border border-white/10 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-light/30 focus:border-brand-light/50 text-left bg-[#000000] focus:bg-[#0a0a0a] transition-colors"
             />
         </div>
     );

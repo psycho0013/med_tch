@@ -192,11 +192,11 @@ export default function HeroEditor() {
         <div>
             <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-2xl font-black text-slate-900 flex items-center gap-3">
-                        <Type className="w-7 h-7 text-cyan-600" />
+                    <h2 className="text-2xl font-black text-white flex items-center gap-3">
+                        <Type className="w-7 h-7 text-cyan-500" />
                         إدارة البانر الإعلاني (الهيرو)
                     </h2>
-                    <p className="text-slate-500 text-sm font-medium mt-1">أضف، عدل، أو احذف الإعلانات التي تظهر في الواجهة الرئيسية بشكل متتابع.</p>
+                    <p className="text-zinc-400 text-sm font-medium mt-1">أضف، عدل، أو احذف الإعلانات التي تظهر في الواجهة الرئيسية بشكل متتابع.</p>
                 </div>
                 <button
                     onClick={handleAddBanner}
@@ -209,35 +209,35 @@ export default function HeroEditor() {
             <div className="flex flex-col lg:flex-row gap-8 items-start">
                 {/* Banners List Sidebar */}
                 <div className="w-full lg:w-1/3 flex flex-col gap-3">
-                    <h3 className="font-bold text-slate-800 px-1 mb-1">الإعلانات الحالية ({banners.length})</h3>
+                    <h3 className="font-bold text-white px-1 mb-1">الإعلانات الحالية ({banners.length})</h3>
                     {banners.length === 0 ? (
-                        <div className="bg-slate-50 border border-slate-200 border-dashed rounded-2xl p-8 text-center">
-                            <p className="text-slate-500 text-sm font-medium">لا توجد إعلانات حالياً.</p>
+                        <div className="bg-[#0a0a0a] border border-white/10 border-dashed rounded-2xl p-8 text-center">
+                            <p className="text-zinc-500 text-sm font-medium">لا توجد إعلانات حالياً.</p>
                         </div>
                     ) : (
                         banners.map((b, idx) => (
                             <div 
                                 key={b.id} 
-                                className={`flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer ${selectedId === b.id ? 'bg-white border-brand-dark shadow-md ring-1 ring-brand-dark/20' : 'bg-slate-50 border-slate-200 hover:border-slate-300 hover:bg-white'}`}
+                                className={`flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer ${selectedId === b.id ? 'bg-[#050505] border-brand-light shadow-md ring-1 ring-brand-light/20' : 'bg-[#0a0a0a] border-white/10 hover:border-white/20 hover:bg-[#000000]'}`}
                                 onClick={() => selectBanner(b)}
                             >
                                 <div className="flex items-center gap-3 overflow-hidden">
-                                    <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 overflow-hidden">
+                                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
                                         {b.hero_image_url ? (
                                             <img src={b.hero_image_url} alt="thumb" className="w-full h-full object-cover" />
                                         ) : (
-                                            <ImageIcon className="w-4 h-4 text-slate-400" />
+                                            <ImageIcon className="w-4 h-4 text-zinc-500" />
                                         )}
                                     </div>
                                     <div className="truncate">
-                                        <div className="font-bold text-slate-800 text-sm truncate">{b.title || "بدون عنوان"}</div>
-                                        <div className="text-xs text-slate-500">إعلان #{idx + 1}</div>
+                                        <div className="font-bold text-white text-sm truncate">{b.title || "بدون عنوان"}</div>
+                                        <div className="text-xs text-zinc-500">إعلان #{idx + 1}</div>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <button 
                                         onClick={(e) => { e.stopPropagation(); handleDeleteBanner(b.id); }}
-                                        className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                        className="p-2 text-zinc-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                                         title="حذف الإعلان"
                                     >
                                         <Trash2 className="w-4 h-4" />
@@ -250,41 +250,41 @@ export default function HeroEditor() {
 
                 {/* Editor Form */}
                 {selectedId !== null && (
-                    <div className="w-full lg:w-2/3 bg-white rounded-3xl border border-slate-200 p-6 md:p-8 shadow-sm">
-                        <div className="flex items-center gap-2 mb-6 pb-4 border-b border-slate-100">
-                            <Edit className="w-5 h-5 text-slate-400" />
-                            <h3 className="font-black text-slate-800 text-lg">تعديل تفاصيل الإعلان</h3>
+                    <div className="w-full lg:w-2/3 bg-[#0a0a0a] rounded-3xl border border-white/10 p-6 md:p-8 shadow-sm">
+                        <div className="flex items-center gap-2 mb-6 pb-4 border-b border-white/10">
+                            <Edit className="w-5 h-5 text-zinc-500" />
+                            <h3 className="font-black text-white text-lg">تعديل تفاصيل الإعلان</h3>
                         </div>
                         
                         <div className="space-y-6">
                             <div>
-                                <label className="block text-sm font-bold text-slate-600 mb-1.5">العنوان الرئيسي</label>
+                                <label className="block text-sm font-bold text-zinc-400 mb-1.5">العنوان الرئيسي</label>
                                 <input
                                     type="text" value={title} onChange={(e) => setTitle(e.target.value)}
-                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-dark/20"
+                                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-[#000000] text-lg font-black text-white focus:outline-none focus:ring-2 focus:ring-brand-light/30"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-slate-600 mb-1.5">الوصف الفرعي</label>
+                                <label className="block text-sm font-bold text-zinc-400 mb-1.5">الوصف الفرعي</label>
                                 <textarea
                                     value={subtitle} onChange={(e) => setSubtitle(e.target.value)} rows={3}
-                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-dark/20 resize-none"
+                                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-[#000000] text-sm text-zinc-300 focus:outline-none focus:ring-2 focus:ring-brand-light/30 resize-none"
                                 />
                             </div>
                             <div className="grid md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-600 mb-1.5">نص الزر الرئيسي (CTA)</label>
+                                    <label className="block text-sm font-bold text-zinc-400 mb-1.5">نص الزر الرئيسي (CTA)</label>
                                     <input
                                         type="text" value={ctaText} onChange={(e) => setCtaText(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-dark/20"
+                                        className="w-full px-4 py-3 rounded-xl border border-white/10 bg-[#000000] text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-light/30"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-600 mb-1.5">رابط الزر الرئيسي</label>
+                                    <label className="block text-sm font-bold text-zinc-400 mb-1.5">رابط الزر الرئيسي</label>
                                     <select
                                         value={ctaLink} onChange={(e) => setCtaLink(e.target.value)}
                                         dir="ltr"
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-dark/20 text-left bg-white"
+                                        className="w-full px-4 py-3 rounded-xl border border-white/10 bg-[#000000] text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-light/30 text-left"
                                     >
                                         <option value="/#pc">قسم تجميعات PC (بالرئيسية)</option>
                                         <option value="/category/pcs">صفحة تجميعات PC</option>
@@ -297,18 +297,18 @@ export default function HeroEditor() {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-600 mb-1.5">نص الزر الثانوي</label>
+                                    <label className="block text-sm font-bold text-zinc-400 mb-1.5">نص الزر الثانوي</label>
                                     <input
                                         type="text" value={secondaryCtaText} onChange={(e) => setSecondaryCtaText(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-dark/20"
+                                        className="w-full px-4 py-3 rounded-xl border border-white/10 bg-[#000000] text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-light/30"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-slate-600 mb-1.5">رابط الزر الثانوي</label>
+                                    <label className="block text-sm font-bold text-zinc-400 mb-1.5">رابط الزر الثانوي</label>
                                     <select
                                         value={secondaryCtaLink} onChange={(e) => setSecondaryCtaLink(e.target.value)}
                                         dir="ltr"
-                                        className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-dark/20 text-left bg-white"
+                                        className="w-full px-4 py-3 rounded-xl border border-white/10 bg-[#000000] text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-light/30 text-left"
                                     >
                                         <option value="">بدون زر ثانوي</option>
                                         <option value="/#pc">قسم تجميعات PC (بالرئيسية)</option>
@@ -323,25 +323,25 @@ export default function HeroEditor() {
                                 </div>
                             </div>
 
-                            <div className="pt-6 border-t border-slate-100">
-                                <h3 className="font-bold text-slate-800 mb-4">صورة الإعلان</h3>
+                            <div className="pt-6 border-t border-white/10">
+                                <h3 className="font-bold text-white mb-4">صورة الإعلان</h3>
                                 <div className="grid md:grid-cols-2 gap-4">
                                     <div className="col-span-full mb-4 pb-4">
-                                        <label className="block text-sm font-bold text-slate-600 mb-2 flex items-center gap-1.5">
+                                        <label className="block text-sm font-bold text-zinc-400 mb-2 flex items-center gap-1.5">
                                             <ImageIcon className="w-4 h-4 text-blue-500" /> ارفع صورة بدقة عالية
                                         </label>
                                         <div className="flex flex-col sm:flex-row items-center gap-4">
                                             <label className="relative cursor-pointer w-full sm:w-auto flex-1">
-                                                <div className="w-full px-4 py-3 rounded-xl border-2 border-dashed border-slate-300 hover:border-brand-dark hover:bg-brand-dark/5 transition-colors flex items-center justify-center gap-2">
+                                                <div className="w-full px-4 py-3 rounded-xl border-2 border-dashed border-white/20 hover:border-brand-light/50 hover:bg-brand-light/5 transition-colors flex items-center justify-center gap-2">
                                                     {uploadingImage ? (
                                                         <>
-                                                            <Loader2 className="w-5 h-5 text-brand-dark animate-spin" />
-                                                            <span className="text-sm font-bold text-brand-dark">جاري الرفع...</span>
+                                                            <Loader2 className="w-5 h-5 text-brand-light animate-spin" />
+                                                            <span className="text-sm font-bold text-brand-light">جاري الرفع...</span>
                                                         </>
                                                     ) : (
                                                         <>
-                                                            <Upload className="w-5 h-5 text-slate-500" />
-                                                            <span className="text-sm font-bold text-slate-600">اختر صورة</span>
+                                                            <Upload className="w-5 h-5 text-zinc-500" />
+                                                            <span className="text-sm font-bold text-zinc-400">اختر صورة</span>
                                                         </>
                                                     )}
                                                 </div>
@@ -363,41 +363,41 @@ export default function HeroEditor() {
                                 </div>
                             </div>
 
-                            <div className="pt-6 border-t border-slate-100">
-                                <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <div className="pt-6 border-t border-white/10">
+                                <h3 className="font-bold text-white mb-4 flex items-center gap-2">
                                     المربع العائم (العرض الذكي)
                                     <label className="relative inline-flex items-center cursor-pointer mr-auto text-sm">
                                         <input
                                             type="checkbox" className="sr-only peer"
                                             checked={badgeVisible} onChange={(e) => setBadgeVisible(e.target.checked)}
                                         />
-                                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
-                                        <span className="mr-3 font-medium text-slate-600">{badgeVisible ? 'مفعل' : 'معطل'}</span>
+                                        <div className="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                                        <span className="mr-3 font-medium text-zinc-400">{badgeVisible ? 'مفعل' : 'معطل'}</span>
                                     </label>
                                 </h3>
 
                                 <div className={`grid md:grid-cols-2 gap-4 transition-opacity ${!badgeVisible ? 'opacity-50 pointer-events-none' : ''}`}>
                                     <div>
-                                        <label className="block text-sm font-bold text-slate-600 mb-1.5">الوسم العلوي (Top Label)</label>
+                                        <label className="block text-sm font-bold text-zinc-400 mb-1.5">الوسم العلوي (Top Label)</label>
                                         <input
                                             type="text" value={badgeTitle} onChange={(e) => setBadgeTitle(e.target.value)}
-                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20"
+                                            className="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-[#000000] text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-light/30"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-slate-600 mb-1.5">نص العرض</label>
+                                        <label className="block text-sm font-bold text-zinc-400 mb-1.5">نص العرض</label>
                                         <input
                                             type="text" value={badgeText} onChange={(e) => setBadgeText(e.target.value)}
-                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-dark/20"
+                                            className="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-[#000000] text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-light/30"
                                         />
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-4 pt-6 mt-2 border-t border-slate-100">
+                            <div className="flex items-center gap-4 pt-6 mt-2 border-t border-white/10">
                                 <button
                                     onClick={handleSave} disabled={saving}
-                                    className="flex items-center gap-2 px-8 py-3 rounded-xl bg-brand-dark text-white font-bold text-sm hover:opacity-90 disabled:opacity-50 shadow-md w-full md:w-auto justify-center"
+                                    className="flex items-center gap-2 px-8 py-3 rounded-xl bg-white text-black font-bold text-sm hover:bg-zinc-200 disabled:opacity-50 shadow-md w-full md:w-auto justify-center transition-colors"
                                 >
                                     {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                                     حفظ التعديلات

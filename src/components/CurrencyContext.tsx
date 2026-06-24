@@ -9,6 +9,7 @@ interface CurrencyContextType {
     setCurrency: (currency: Currency) => void;
     exchangeRate: number;
     formatPrice: (usdPrice: number) => string;
+    formatIQD: (iqdPrice: number) => string;
 }
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
@@ -40,8 +41,15 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
         return `${iqdPrice.toLocaleString()} د.ع`;
     };
 
+    const formatIQD = (iqdPrice: number) => {
+        if (currency === "USD") {
+            return `$${(iqdPrice / (exchangeRate / 100)).toFixed(2)}`;
+        }
+        return `${iqdPrice.toLocaleString()} د.ع`;
+    };
+
     return (
-        <CurrencyContext.Provider value={{ currency, setCurrency, exchangeRate, formatPrice }}>
+        <CurrencyContext.Provider value={{ currency, setCurrency, exchangeRate, formatPrice, formatIQD }}>
             {children}
         </CurrencyContext.Provider>
     );

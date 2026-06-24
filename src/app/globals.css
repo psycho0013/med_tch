@@ -1,15 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: light;
-  --background: #f8fafc;
-  /* slate-50 */
-  --foreground: #0f172a;
-  /* slate-900 */
-  --primary: #00E5FF;
-  --primary-dark: #007BFF;
-  --glass-border: rgba(0, 0, 0, 0.05);
-  --glass-bg: rgba(255, 255, 255, 0.8);
+  color-scheme: dark;
+  --background: #050505;
+  --foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-dark: #a1a1aa; /* zinc-400 */
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-bg: rgba(20, 20, 20, 0.6);
 }
 
 @theme inline {
@@ -27,6 +25,21 @@ body {
   font-family: var(--font-sans), sans-serif;
 }
 
+/* Custom Scrollbar for Dark Theme */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #050505; 
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a; /* zinc-800 */
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46; /* zinc-700 */
+}
+
 /* Glassmorphism Utilities */
 @layer utilities {
   .glass-panel {
@@ -34,7 +47,7 @@ body {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
   }
 
   .text-gradient {

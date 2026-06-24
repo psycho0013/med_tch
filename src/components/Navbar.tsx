@@ -2,22 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { default as NextLink } from "next/link";
-import { Menu, X, User, Monitor, Tv, Mouse, ArrowRightLeft, ShoppingCart, Heart, Smartphone, Home } from "lucide-react";
+import { Menu, X, User, ShoppingCart, Search, Smartphone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import LoginModal from "./LoginModal";
 import { useCurrency } from "./CurrencyContext";
 import { useCart } from "@/lib/CartContext";
-import { useFavorites } from "@/lib/FavoritesContext";
 
 export default function Navbar() {
     const { currency, setCurrency } = useCurrency();
     const { totalItems, setIsCartOpen } = useCart();
-    const { totalFavorites, setIsFavoritesOpen } = useFavorites();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [logoUrl, setLogoUrl] = useState<string | null>(null);
     const [partnerName, setPartnerName] = useState("");
     const [partnerUrl, setPartnerUrl] = useState("");
+    const [isScrolled, setIsScrolled] = useState(false);
 
     useEffect(() => {
         fetch("/api/settings")
@@ -30,6 +27,12 @@ export default function Navbar() {
                 }
             })
             .catch(() => {});
+
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20);
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     const toggleCurrency = () => {
@@ -37,100 +40,90 @@ export default function Navbar() {
     };
 
     const navLinks = [
-        { name: "الرئيسية", href: "/", icon: <Home className="w-4 h-4" /> },
-        { name: "تجميعات PC", href: "/#pc", icon: <Monitor className="w-4 h-4" /> },
-        { name: "شاشات", href: "/#monitors", icon: <Tv className="w-4 h-4" /> },
-        { name: "قطع وإكسسوارات", href: "/#accessories", icon: <Mouse className="w-4 h-4" /> },
-        { name: "المقارنة الذكية", href: "/compare", icon: <ArrowRightLeft className="w-4 h-4 text-brand-dark" /> },
+        { name: "الرئيسية", href: "/" },
+        { name: "تجميعات PC", href: "/#pc" },
+        { name: "شاشات", href: "/#monitors" },
+        { name: "قطع وإكسسوارات", href: "/#accessories" },
+        { name: "المقارنة الذكية", href: "/compare" },
     ];
 
     return (
-        <nav className="fixed top-0 inset-x-0 z-50 glass-panel border-b border-white/20">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-20">
+        <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-[#050505]/95 backdrop-blur-md border-b border-white/5' : 'bg-transparent border-transparent'}`}>
+            <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+                <div className={`flex justify-between items-center transition-all duration-300 ${isScrolled ? 'h-20' : 'h-24'}`}>
                     {/* Logo */}
-                    <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+                    <div className="flex-shrink-0 flex flex-col justify-center cursor-pointer">
                         {logoUrl ? (
-                            <img src={logoUrl} alt="Logo" className="h-14 md:h-16 w-auto object-contain" />
+                            <img src={logoUrl} alt="Logo" className="h-14 md:h-16 w-auto object-contain brightness-0 invert drop-shadow-lg" />
                         ) : (
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-light to-brand-dark flex items-center justify-center shadow-lg shadow-brand-light/30">
-                                <span className="text-white font-bold text-xl">TC</span>
-                            </div>
+                            <>
+                                <span className="font-black text-2xl tracking-tighter text-white leading-none">TC</span>
+                                <span className="text-[10px] text-zinc-400 font-medium">مركز الروان</span>
+                            </>
                         )}
-                        <span className="font-bold text-2xl tracking-tight hidden sm:block">
-                            <span className="text-gradient">مركز الروان</span>
-                        </span>
                     </div>
 
-                    {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center gap-4 lg:gap-8 shrink-0">
-                        <div className="flex items-center gap-3 lg:gap-6 shrink-0">
-                            {partnerUrl && (
-                                <a href={partnerUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-brand-light/10 hover:bg-brand-light/20 text-brand-dark font-bold text-sm transition-colors border border-brand-light/20 shadow-sm ml-2 whitespace-nowrap shrink-0">
-                                    <Smartphone className="w-5 h-5" />
-                                    <span className="whitespace-nowrap">{partnerName || "موقع الهواتف"}</span>
-                                </a>
-                            )}
-                            {navLinks.map((link) => (
-                                <NextLink
-                                    key={link.name}
-                                    href={link.href}
-                                    className="flex items-center gap-1.5 lg:gap-2 text-slate-600 hover:text-brand-dark transition-colors font-medium relative group whitespace-nowrap shrink-0 text-sm lg:text-base"
-                                >
-                                    {link.icon}
-                                    <span>{link.name}</span>
-                                    <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-brand-light transition-all duration-300 group-hover:w-full"></span>
-                                </NextLink>
-                            ))}
-                        </div>
-
-                        <div className="flex items-center gap-3 lg:gap-4 border-r border-slate-200 pr-3 lg:pr-4 shrink-0">
-                            <button
-                                onClick={toggleCurrency}
-                                className="flex items-center justify-between w-20 h-9 bg-slate-100 rounded-full p-1 relative shadow-inner cursor-pointer"
+                    {/* Desktop Nav Links */}
+                    <div className="hidden md:flex items-center justify-center gap-8 flex-1 px-8">
+                        {navLinks.map((link) => (
+                            <NextLink
+                                key={link.name}
+                                href={link.href}
+                                className="text-zinc-300 hover:text-white transition-colors font-medium relative group text-[15px]"
                             >
-                                <div className="absolute inset-y-1 right-1 left-1 flex justify-between z-10 pointers-events-none px-2 items-center text-xs font-bold text-slate-400">
-                                    <span className={currency === "IQD" ? "text-slate-800" : ""}>د.ع</span>
-                                    <span className={currency === "USD" ? "text-slate-800" : ""}>$</span>
-                                </div>
-                                <motion.div
-                                    className="w-8 h-7 bg-white rounded-full shadow-sm z-0"
-                                    animate={{
-                                        x: currency === "IQD" ? 0 : -36,
-                                    }}
-                                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                                />
-                            </button>
-
-                            <button onClick={() => setIsFavoritesOpen(true)} className="relative flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 hover:bg-red-50 hover:text-red-500 text-slate-600 transition-colors" title="المفضلات">
-                                <Heart className="w-5 h-5" />
-                                {totalFavorites > 0 && (
-                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                                        {totalFavorites}
-                                    </span>
-                                )}
-                            </button>
-
-                            <button onClick={() => setIsCartOpen(true)} className="relative flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 hover:bg-brand-light/10 hover:text-brand-dark text-slate-600 transition-colors" title="سلة الشراء">
-                                <ShoppingCart className="w-5 h-5" />
-                                {totalItems > 0 && (
-                                    <span className="absolute -top-1 -right-1 bg-brand-dark text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
-                                        {totalItems}
-                                    </span>
-                                )}
-                            </button>
-
-                            <button onClick={() => setIsLoginModalOpen(true)} className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors" title="تسجيل الدخول / لوحة التحكم">
-                                <User className="w-5 h-5" />
-                            </button>
-                        </div>
+                                <span>{link.name}</span>
+                                <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></span>
+                            </NextLink>
+                        ))}
                     </div>
 
-                    {/* Icons and Mobile Menu */}
-                    <div className="flex items-center gap-2 md:hidden">
+                    {/* Icons */}
+                    <div className="hidden md:flex items-center gap-6 shrink-0">
+                        {partnerUrl && (
+                            <a href={partnerUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/20 hover:bg-white/10 text-white font-medium text-sm transition-colors ml-2 whitespace-nowrap shrink-0">
+                                <Smartphone className="w-4 h-4" />
+                                <span>{partnerName || "موقع الهواتف"}</span>
+                            </a>
+                        )}
+
+                        <button
+                            onClick={toggleCurrency}
+                            className="text-xs font-bold text-zinc-400 hover:text-white transition-colors border border-white/10 px-2 py-1 rounded-md"
+                        >
+                            {currency === "IQD" ? "IQD" : "USD"}
+                        </button>
+
+                        <button className="text-zinc-300 hover:text-white transition-colors">
+                            <Search className="w-[22px] h-[22px]" strokeWidth={1.5} />
+                        </button>
+
+                        <NextLink href="/admin/login" className="text-zinc-300 hover:text-white transition-colors">
+                            <User className="w-[22px] h-[22px]" strokeWidth={1.5} />
+                        </NextLink>
+
+                        <button onClick={() => setIsCartOpen(true)} className="relative text-zinc-300 hover:text-white transition-colors">
+                            <ShoppingCart className="w-[22px] h-[22px]" strokeWidth={1.5} />
+                            {totalItems > 0 && (
+                                <span className="absolute -top-1.5 -right-1.5 bg-white text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                                    {totalItems}
+                                </span>
+                            )}
+                        </button>
+                    </div>
+
+                    {/* Mobile Menu Button */}
+                    <div className="flex items-center gap-4 md:hidden">
+                        <button onClick={() => setIsCartOpen(true)} className="relative text-zinc-300">
+                            <ShoppingCart className="w-[22px] h-[22px]" strokeWidth={1.5} />
+                            {totalItems > 0 && (
+                                <span className="absolute -top-1.5 -right-1.5 bg-white text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                                    {totalItems}
+                                </span>
+                            )}
+                        </button>
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="text-slate-600 hover:text-brand-dark p-2"
+                            className="text-zinc-300 hover:text-white"
                         >
                             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                         </button>
@@ -145,83 +138,52 @@ export default function Navbar() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden glass-panel border-t border-white/20"
+                        className="md:hidden bg-[#050505] border-t border-white/5"
                     >
-                        <div className="px-4 pt-2 pb-6 space-y-1">
+                        <div className="px-4 pt-4 pb-6 space-y-2">
                             {partnerUrl && (
                                 <a
                                     href={partnerUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-3 px-3 py-3 rounded-xl bg-brand-light/10 text-brand-dark border border-brand-light/20 hover:bg-brand-light/20 transition-all duration-300 font-bold mb-2"
+                                    className="flex items-center gap-3 px-3 py-3 rounded-xl bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-colors mb-2"
                                 >
-                                    <Smartphone className="w-5 h-5 shrink-0 text-brand-dark" />
+                                    <Smartphone className="w-5 h-5 text-zinc-300" />
                                     <span>{partnerName || "موقع الهواتف"}</span>
                                 </a>
                             )}
-
                             {navLinks.map((link) => (
                                 <NextLink
                                     key={link.name}
                                     href={link.href}
-                                    className="flex items-center gap-3 px-3 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-brand-dark transition-colors"
+                                    className="block px-3 py-3 rounded-xl text-zinc-400 hover:bg-white/5 hover:text-white transition-colors font-medium"
+                                    onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                    {link.icon}
-                                    <span className="font-medium">{link.name}</span>
+                                    {link.name}
                                 </NextLink>
                             ))}
 
-                            <div className="mt-4 pt-4 border-t border-slate-200 flex flex-col gap-4 px-3">
-                                <div className="flex items-center justify-between">
-                                    <span className="font-medium text-slate-600">تغيير العملة:</span>
-                                    <button
-                                        onClick={toggleCurrency}
-                                        className="flex items-center gap-2 px-4 py-2 bg-slate-100/80 rounded-lg font-bold text-brand-dark hover:bg-slate-200 transition-colors"
-                                    >
-                                        {currency === "IQD" ? "دينار عراقي (IQD)" : "دولار أمريكي (USD)"}
-                                    </button>
-                                </div>
-
+                            <div className="mt-4 pt-4 border-t border-white/5 grid grid-cols-2 gap-3">
                                 <button
-                                    onClick={() => {
-                                        setIsMobileMenuOpen(false);
-                                        setIsCartOpen(true);
-                                    }}
-                                    className="flex items-center justify-center gap-2 px-4 py-3 bg-brand-dark text-white rounded-xl font-bold hover:bg-brand-light transition-colors w-full shadow-md"
+                                    onClick={toggleCurrency}
+                                    className="flex items-center justify-center px-4 py-3 bg-white/5 text-white rounded-xl font-medium hover:bg-white/10 transition-colors"
                                 >
-                                    <ShoppingCart className="w-5 h-5" />
-                                    سلة المشتريات ({totalItems})
+                                    {currency === "IQD" ? "IQD" : "USD"}
                                 </button>
-
-                                <div className="grid grid-cols-2 gap-3">
-                                    <button
-                                        onClick={() => {
-                                            setIsMobileMenuOpen(false);
-                                            setIsFavoritesOpen(true);
-                                        }}
-                                        className="flex items-center justify-center gap-2 px-4 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-red-50 hover:text-red-500 transition-colors w-full"
-                                    >
-                                        <Heart className="w-5 h-5" />
-                                        المفضلات ({totalFavorites})
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            setIsMobileMenuOpen(false);
-                                            setIsLoginModalOpen(true);
-                                        }}
-                                        className="flex items-center justify-center gap-2 px-4 py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors w-full shadow-md"
-                                    >
-                                        <User className="w-5 h-5" />
-                                        لوحة التحكم
-                                    </button>
-                                </div>
+                                <NextLink
+                                    href="/admin/login"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="flex items-center justify-center px-4 py-3 bg-white/5 text-white rounded-xl font-medium hover:bg-white/10 transition-colors"
+                                >
+                                    حسابي
+                                </NextLink>
                             </div>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
         </nav>
     );
 }
+

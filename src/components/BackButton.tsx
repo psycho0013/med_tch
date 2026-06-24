@@ -8,7 +8,7 @@ export default function BackButton() {
     return (
         <button 
             onClick={() => router.back()} 
-            className="inline-flex items-center gap-2 text-slate-500 hover:text-brand-dark transition-colors font-bold bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm cursor-pointer"
+            className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors font-bold bg-[#0a0a0a] hover:bg-white/5 px-4 py-2 rounded-xl border border-white/10 shadow-sm cursor-pointer"
         >
             <ArrowRight className="w-5 h-5" /> رجوع
         </button>

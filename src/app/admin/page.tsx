@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import {
-    LayoutDashboard, Monitor, Type, Package, Cpu, Tv, Headphones
+    LayoutDashboard, Monitor, Type, Package, Cpu, Tv, Headphones, LogOut
 } from "lucide-react";
 import ProductsManager from "./components/ProductsManager";
 import HeroEditor from "./components/HeroEditor";
@@ -24,16 +24,25 @@ const sidebarItems: { key: AdminView; label: string; icon: React.ReactNode }[] =
 export default function AdminPage() {
     const [activeView, setActiveView] = useState<AdminView>("dashboard");
 
+    const handleLogout = async () => {
+        try {
+            await fetch("/api/auth/logout", { method: "POST" });
+            window.location.href = "/admin/login";
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
+
     return (
-        <div className="min-h-screen bg-slate-50 flex font-sans" dir="rtl">
+        <div className="min-h-screen bg-[#000000] flex font-sans" dir="rtl">
             {/* Sidebar */}
-            <aside className="w-64 bg-white border-l border-slate-200 shadow-sm flex flex-col fixed h-full z-40">
-                <div className="p-6 border-b border-slate-100">
-                    <h1 className="text-xl font-black text-slate-900 flex items-center gap-2">
-                        <Package className="w-6 h-6 text-brand-dark" />
+            <aside className="w-64 bg-[#0a0a0a] border-l border-white/10 shadow-sm flex flex-col fixed h-full z-40">
+                <div className="p-6 border-b border-white/10">
+                    <h1 className="text-xl font-black text-white flex items-center gap-2">
+                        <Package className="w-6 h-6 text-brand-light" />
                         لوحة الإدارة
                     </h1>
-                    <p className="text-xs text-slate-500 mt-1">Al-Rwan Center CMS</p>
+                    <p className="text-xs text-zinc-500 mt-1">Al-Rwan Center CMS</p>
                 </div>
 
                 <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
@@ -42,8 +51,8 @@ export default function AdminPage() {
                             key={item.key}
                             onClick={() => setActiveView(item.key)}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeView === item.key
-                                ? "bg-brand-dark text-white shadow-md"
-                                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                                ? "bg-white/10 text-brand-light border border-white/20 shadow-sm"
+                                : "text-zinc-400 hover:bg-white/5 hover:text-white"
                                 }`}
                         >
                             {item.icon}
@@ -52,8 +61,15 @@ export default function AdminPage() {
                     ))}
                 </nav>
 
-                <div className="p-4 border-t border-slate-100">
-                    <a href="/" className="block w-full text-center py-2 px-4 rounded-xl bg-slate-100 text-slate-700 text-sm font-bold hover:bg-slate-200 transition-colors">
+                <div className="p-4 border-t border-white/10 space-y-3">
+                    <button 
+                        onClick={handleLogout}
+                        className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-bold hover:bg-red-500/20 transition-colors"
+                    >
+                        <LogOut className="w-4 h-4" />
+                        تسجيل الخروج
+                    </button>
+                    <a href="/" className="block w-full text-center py-2.5 px-4 rounded-xl bg-white/5 border border-white/10 text-zinc-400 text-sm font-bold hover:bg-white/10 hover:text-white transition-colors">
                         العودة للموقع ←
                     </a>
                 </div>
@@ -84,8 +100,8 @@ function DashboardHome({ onNavigate }: { onNavigate: (v: AdminView) => void }) {
     return (
         <div>
             <div className="mb-8">
-                <h2 className="text-3xl font-black text-slate-900">مرحباً بك في لوحة التحكم 👋</h2>
-                <p className="text-slate-500 font-medium mt-2">إدارة جميع المنتجات (تجميعات، قطع، شاشات، وإكسسوارات) والبانر الإعلاني.</p>
+                <h2 className="text-3xl font-black text-white">مرحباً بك في لوحة التحكم 👋</h2>
+                <p className="text-zinc-400 font-medium mt-2">إدارة جميع المنتجات (تجميعات، قطع، شاشات، وإكسسوارات) والبانر الإعلاني.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -93,14 +109,14 @@ function DashboardHome({ onNavigate }: { onNavigate: (v: AdminView) => void }) {
                     <button
                         key={cat.key}
                         onClick={() => onNavigate(cat.key)}
-                        className="group p-6 rounded-3xl bg-white border border-slate-200 hover:shadow-xl hover:border-brand-light transition-all text-right flex flex-col justify-between"
+                        className="group p-6 rounded-3xl bg-[#0a0a0a] border border-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] hover:border-brand-light/30 transition-all text-right flex flex-col justify-between"
                     >
                         <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${cat.color} text-white flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-md`}>
                             {cat.icon}
                         </div>
                         <div>
-                            <h3 className="text-xl font-black text-slate-800">{cat.label}</h3>
-                            <p className="text-xs text-slate-500 mt-1 font-medium">إدارة المنتجات والأقسام</p>
+                            <h3 className="text-xl font-black text-white">{cat.label}</h3>
+                            <p className="text-xs text-zinc-500 mt-1 font-medium">إدارة المنتجات والأقسام</p>
                         </div>
                     </button>
                 ))}
@@ -109,14 +125,14 @@ function DashboardHome({ onNavigate }: { onNavigate: (v: AdminView) => void }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <button 
                     onClick={() => onNavigate("hero")} 
-                    className="group p-8 rounded-3xl bg-white border border-slate-200 hover:shadow-xl hover:border-cyan-300 transition-all text-right flex items-center gap-6"
+                    className="group p-8 rounded-3xl bg-[#0a0a0a] border border-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] hover:border-cyan-300/30 transition-all text-right flex items-center gap-6"
                 >
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-700 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shrink-0">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-cyan-700 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shrink-0 border border-white/10">
                         <Type className="w-8 h-8" />
                     </div>
                     <div>
-                        <h3 className="text-2xl font-black text-slate-800">البانر التسويقي (الهيرو)</h3>
-                        <p className="text-sm text-slate-500 mt-2 font-medium leading-relaxed">
+                        <h3 className="text-2xl font-black text-white">البانر التسويقي (الهيرو)</h3>
+                        <p className="text-sm text-zinc-400 mt-2 font-medium leading-relaxed">
                             عدل الواجهة الإعلانية، غير النصوص وارفع صورة بدقة كاملة للبانر.
                         </p>
                     </div>

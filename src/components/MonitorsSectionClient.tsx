@@ -18,17 +18,17 @@ export default function MonitorsSectionClient({ products }: { products: Product[
     if (products.length === 0) return null;
 
     return (
-        <section id="monitors" className="py-20 relative z-10 bg-white border-y border-slate-100">
+        <section id="monitors" className="py-20 relative z-10 bg-[#050505] border-y border-white/5">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                     <div className="max-w-2xl">
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-sm font-bold mb-4 border border-indigo-100"><Tv className="w-4 h-4" /> شاشات وتلفزيونات</div>
-                        <h2 className="text-3xl lg:text-5xl font-black text-slate-900 mb-4 leading-tight">أفضل <span className="text-indigo-600">الشاشات</span> للقيمنق والمشاهدة</h2>
-                        <p className="text-slate-600 font-medium text-lg">مهما كان استخدامك (التنافس، التختيم، المونتاج أو المشاهدة)، جمعنا لك أفضل شاشات السوق.</p>
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-white text-sm font-bold mb-4 border border-white/20"><Tv className="w-4 h-4" /> شاشات وتلفزيونات</div>
+                        <h2 className="text-3xl lg:text-5xl font-black text-white mb-4 leading-tight">أفضل <span className="text-zinc-400">الشاشات</span> للقيمنق والمشاهدة</h2>
+                        <p className="text-zinc-400 font-medium text-lg">مهما كان استخدامك (التنافس، التختيم، المونتاج أو المشاهدة)، جمعنا لك أفضل شاشات السوق.</p>
                     </div>
-                    <Link href="/category/monitors" className="relative overflow-hidden flex items-center justify-center gap-2 bg-white text-indigo-700 font-bold px-6 py-3 rounded-xl border border-indigo-200 transition-all shadow-sm group">
-                        <span className="absolute inset-0 w-0 bg-indigo-600 transition-all duration-300 ease-out group-hover:w-full"></span>
-                        <span className="relative flex items-center gap-2 group-hover:text-white transition-colors duration-300">
+                    <Link href="/category/monitors" className="relative overflow-hidden flex items-center justify-center gap-2 bg-zinc-900 text-white font-bold px-6 py-3 rounded-xl border border-white/10 transition-all shadow-sm group hover:border-white/30">
+                        <span className="absolute inset-0 w-0 bg-white transition-all duration-300 ease-out group-hover:w-full"></span>
+                        <span className="relative flex items-center gap-2 group-hover:text-black transition-colors duration-300">
                             عرض كل الشاشات <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 inline-block transition-transform duration-300" />
                         </span>
                     </Link>
@@ -36,9 +36,9 @@ export default function MonitorsSectionClient({ products }: { products: Product[
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {products.map((product, index) => (
                         <motion.div key={product.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1, duration: 0.5 }} whileHover={{ y: -5 }}
-                            className="glass-panel rounded-3xl p-5 relative group overflow-hidden border border-slate-200 hover:shadow-2xl hover:border-indigo-300 transition-all bg-white flex flex-col h-full cursor-pointer">
+                            className="bg-zinc-900/80 backdrop-blur-md rounded-3xl p-5 relative group overflow-hidden border border-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:border-white/30 transition-all flex flex-col h-full cursor-pointer">
                             <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 items-end">
-                                <div className="px-2 py-1.5 rounded-md bg-white/90 backdrop-blur-sm text-indigo-700 text-xs font-bold shadow-sm border border-slate-100">{product.tag}</div>
+                                <div className="px-2 py-1.5 rounded-md bg-white/10 backdrop-blur-sm text-white text-xs font-bold shadow-sm border border-white/20">{product.tag}</div>
                                 {product.is_offer && (
                                     <div className="px-2 py-1.5 rounded-md bg-red-500 text-white text-xs font-bold shadow-md shadow-red-500/20">
                                         {product.offer_discount || 'عرض خاص'}
@@ -54,18 +54,18 @@ export default function MonitorsSectionClient({ products }: { products: Product[
                                         addToFavorites(product);
                                     }
                                 }}
-                                className="absolute top-4 left-4 p-2 rounded-full bg-white/90 backdrop-blur-sm text-slate-400 hover:text-red-500 transition-colors z-20 shadow-sm border border-slate-100"
+                                className="absolute top-4 left-4 p-2 rounded-full bg-black/50 backdrop-blur-sm text-zinc-400 hover:text-red-500 hover:bg-white/10 transition-colors z-20 shadow-sm border border-white/10"
                             >
                                 <Heart fill={isFavorite(product.id) ? "currentColor" : "none"} className={isFavorite(product.id) ? "text-red-500 w-4 h-4" : "w-4 h-4"} />
                             </button>
-                            <div className={`w-full aspect-[4/3] rounded-2xl ${product.bg_color} mb-6 flex flex-col items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-500 mt-2`}>
+                            <div className={`w-full aspect-[4/3] rounded-2xl ${product.bg_color ? product.bg_color.replace('bg-blue-50', 'bg-blue-900/20').replace('bg-indigo-50', 'bg-indigo-900/20').replace('bg-purple-50', 'bg-purple-900/20') : 'bg-white/5'} mb-6 flex flex-col items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-500 mt-2`}>
                                 {product.image_url ? (
-                                    <img src={product.image_url} alt={product.name} className="w-full h-full object-contain p-4 drop-shadow-xl mix-blend-multiply" />
+                                    <img src={product.image_url} alt={product.name} className="w-full h-full object-contain p-4 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" />
                                 ) : (
                                     <>
-                                        <div className="absolute bottom-4 w-28 h-2 bg-slate-400 rounded-full shadow-lg"></div>
-                                        <div className="absolute bottom-6 w-4 h-12 bg-slate-500 rounded-t-lg"></div>
-                                        <div className="w-4/5 aspect-video max-w-[85%] bg-black rounded-lg shadow-2xl border-4 border-slate-300 flex items-center justify-center z-10 relative overflow-hidden">
+                                        <div className="absolute bottom-4 w-28 h-2 bg-zinc-600 rounded-full shadow-lg"></div>
+                                        <div className="absolute bottom-6 w-4 h-12 bg-zinc-700 rounded-t-lg"></div>
+                                        <div className="w-4/5 aspect-video max-w-[85%] bg-black rounded-lg shadow-2xl border-4 border-zinc-500 flex items-center justify-center z-10 relative overflow-hidden">
                                             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
                                             <div className="text-white/30 font-black text-xl tracking-wider">{product.brand}</div>
                                         </div>
@@ -74,19 +74,19 @@ export default function MonitorsSectionClient({ products }: { products: Product[
                             </div>
                             <div className="flex-1 flex flex-col">
                                 <div className="flex justify-between items-start mb-3">
-                                    <div><h3 className="text-lg font-black text-slate-900 leading-tight mb-1">{product.name}</h3><p className="text-sm text-slate-500 font-medium">{product.type}</p></div>
-                                    <div className="flex items-center gap-1 bg-yellow-50 text-yellow-600 px-2 py-1 rounded-md text-xs font-bold border border-yellow-100 shadow-sm shrink-0"><Star className="w-3 h-3 fill-current" /> {product.rating}</div>
+                                    <div><h3 className="text-lg font-black text-white leading-tight mb-1 group-hover:text-zinc-300 transition-colors">{product.name}</h3><p className="text-sm text-zinc-400 font-medium">{product.type}</p></div>
+                                    <div className="flex items-center gap-1 bg-yellow-500/10 text-yellow-500 px-2 py-1 rounded-md text-xs font-bold border border-yellow-500/20 shadow-sm shrink-0"><Star className="w-3 h-3 fill-current" /> {product.rating}</div>
                                 </div>
                                 <div className="space-y-2 mb-5">
                                     {[MonitorPlay, RefreshCw, Zap].map((Icon, i) => product.features[i] && (
-                                        <div key={i} className="flex items-center gap-3 text-sm text-slate-600 font-medium bg-slate-50 p-2 rounded-lg border border-slate-100">
-                                            <Icon className="w-4 h-4 text-indigo-400 shrink-0" /> <span className="line-clamp-1">{product.features[i]}</span>
+                                        <div key={i} className="flex items-center gap-3 text-sm text-zinc-300 font-medium bg-white/5 p-2 rounded-lg border border-white/10">
+                                            <Icon className="w-4 h-4 text-zinc-500 shrink-0" /> <span className="line-clamp-1">{product.features[i]}</span>
                                         </div>
                                     ))}
                                 </div>
-                                <div className="pt-4 border-t border-slate-100 mt-auto space-y-3">
+                                <div className="pt-4 border-t border-white/10 mt-auto space-y-3">
                                     <div className="flex items-end justify-center mb-2">
-                                        <div className="text-xl font-black text-brand-dark bg-brand-light/10 px-4 py-1.5 rounded-xl border border-brand-light/20">{formatPrice(product.price_usd)}</div>
+                                        <div className="text-xl font-black text-white bg-white/10 px-4 py-1.5 rounded-xl border border-white/20">{formatPrice(product.price_usd)}</div>
                                     </div>
                                     <div className="flex gap-2">
                                         <button 
@@ -94,12 +94,12 @@ export default function MonitorsSectionClient({ products }: { products: Product[
                                                 e.stopPropagation();
                                                 addToCart(product);
                                             }} 
-                                            className="flex-1 py-2.5 rounded-xl bg-brand-dark text-white font-bold text-sm hover:bg-brand-light transition-colors flex items-center justify-center gap-2 shadow-sm"
+                                            className="flex-1 py-2.5 rounded-xl bg-white text-black font-bold text-sm hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2 shadow-sm"
                                         >
                                             <ShoppingCart className="w-4 h-4" />
                                             سلة
                                         </button>
-                                        <button onClick={() => setSelectedProduct(product)} className="flex-[1.5] py-2.5 rounded-xl border-2 border-indigo-100 text-indigo-700 font-bold text-sm hover:bg-indigo-50 hover:border-indigo-200 transition-colors flex items-center justify-center gap-2">التفاصيل</button>
+                                        <button onClick={() => setSelectedProduct(product)} className="flex-[1.5] py-2.5 rounded-xl border border-white/20 text-white font-bold text-sm hover:bg-white/10 transition-colors flex items-center justify-center gap-2">التفاصيل</button>
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +107,7 @@ export default function MonitorsSectionClient({ products }: { products: Product[
                     ))}
                 </div>
             </div>
-            <SpecsModal isOpen={!!selectedProduct} onClose={() => setSelectedProduct(null)} product={selectedProduct} titleIcon={<Tv className="w-6 h-6 text-indigo-600" />} />
+            <SpecsModal isOpen={!!selectedProduct} onClose={() => setSelectedProduct(null)} product={selectedProduct} titleIcon={<Tv className="w-6 h-6 text-white" />} />
         </section>
     );
 }

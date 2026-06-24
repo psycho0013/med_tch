@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <body className={`${cairo.variable} font-sans antialiased bg-slate-50 text-slate-900`} suppressHydrationWarning>
+      <body className={`${cairo.variable} font-sans antialiased bg-[#050505] text-white`} suppressHydrationWarning>
         <CurrencyProvider>
           <CartProvider>
             <FavoritesProvider>
