@@ -58,9 +58,9 @@ export default function PCsSectionClient({ products }: { products: Product[] }) 
                         <motion.div key={product.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1, duration: 0.5 }} whileHover={{ y: -5 }}
                             className="w-[85vw] sm:w-[300px] md:w-[360px] max-w-[400px] snap-start shrink-0 relative p-[1px] rounded-3xl bg-gradient-to-br from-white/20 to-white/5 overflow-hidden group hover:from-white/40 hover:to-white/10 transition-all duration-500 cursor-pointer shadow-sm hover:shadow-[0_0_30px_rgba(255,255,255,0.1)]">
                             <div className="bg-zinc-900/90 backdrop-blur-md rounded-[1.4rem] h-full p-6 flex flex-col relative z-10">
-                                <div className="absolute top-6 right-6 px-3 py-1 rounded-md bg-white/10 text-white text-xs font-bold border border-white/20">{product.tag}</div>
+                                <div className="absolute top-6 right-6 px-3 py-1 rounded-md bg-white/10 text-white text-xs font-bold border border-white/20 z-20">{product.tag}</div>
                                 {product.is_offer && (
-                                    <div className="absolute top-14 right-6 px-3 py-1 rounded-md bg-red-500 text-white text-xs font-bold shadow-md shadow-red-500/20">
+                                    <div className="absolute top-14 right-6 px-3 py-1 rounded-md bg-red-500 text-white text-xs font-bold shadow-md shadow-red-500/20 z-20">
                                         {product.offer_discount || 'عرض خاص'}
                                     </div>
                                 )}

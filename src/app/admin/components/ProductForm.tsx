@@ -25,6 +25,7 @@ export default function ProductForm({ category, existingProduct, onSuccess, onCa
     const [type, setType] = useState(existingProduct?.type || "");
     const [imageUrl, setImageUrl] = useState(existingProduct?.image_url || "");
     const [isOffer, setIsOffer] = useState(existingProduct?.is_offer || false);
+    const [originalPriceUSD, setOriginalPriceUSD] = useState(existingProduct?.original_price_usd || 0);
     const [offerDiscount, setOfferDiscount] = useState(existingProduct?.offer_discount || "");
     const [features, setFeatures] = useState<string[]>(existingProduct?.features || ["", "", ""]);
 
@@ -121,6 +122,8 @@ export default function ProductForm({ category, existingProduct, onSuccess, onCa
             type: type || null,
             image_url: imageUrl || null,
             is_offer: isOffer,
+            original_price_usd: isOffer ? originalPriceUSD : null,
+            original_price_iqd: isOffer ? originalPriceUSD * (exchangeRate / 100) : null,
             offer_discount: offerDiscount || null,
             features: features.filter((f) => f.trim()),
             full_specs: fullSpecs,
@@ -237,17 +240,30 @@ export default function ProductForm({ category, existingProduct, onSuccess, onCa
                     </div>
 
                     {/* Offer Toggle */}
-                    <div className="flex items-center gap-4 pt-2 border-t border-white/10">
-                        <label className="flex items-center gap-2 cursor-pointer">
+                    <div className="flex flex-col gap-4 pt-4 border-t border-white/10">
+                        <label className="flex items-center gap-2 cursor-pointer w-fit">
                             <input type="checkbox" checked={isOffer} onChange={(e) => setIsOffer(e.target.checked)} className="w-5 h-5 rounded accent-brand-light" />
-                            <span className="font-bold text-white text-sm">هل المنتج ضمن عرض خاص؟</span>
+                            <span className="font-bold text-white text-sm">هل المنتج ضمن عرض خاص (Discount)؟</span>
                         </label>
                         {isOffer && (
-                            <input
-                                type="text" placeholder="مثال: خصم 50$ لفترة محدودة" value={offerDiscount}
-                                onChange={(e) => setOfferDiscount(e.target.value)}
-                                className="flex-1 px-4 py-2 rounded-xl border border-white/10 bg-[#000000] text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-light/30"
-                            />
+                            <div className="flex gap-4 items-center bg-white/5 p-4 rounded-xl border border-brand-light/20">
+                                <div className="flex-1">
+                                    <label className="block text-xs font-bold text-zinc-400 mb-1">السعر الأصلي قبل الخصم (USD)</label>
+                                    <input
+                                        type="number" placeholder="مثال: 300" value={originalPriceUSD || ""}
+                                        onChange={(e) => setOriginalPriceUSD(Number(e.target.value))}
+                                        className="w-full px-4 py-2 rounded-xl border border-white/10 bg-[#000000] text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-light/30"
+                                    />
+                                </div>
+                                <div className="flex-1">
+                                    <label className="block text-xs font-bold text-zinc-400 mb-1">نص إضافي (اختياري)</label>
+                                    <input
+                                        type="text" placeholder="مثال: شحن مجاني" value={offerDiscount}
+                                        onChange={(e) => setOfferDiscount(e.target.value)}
+                                        className="w-full px-4 py-2 rounded-xl border border-white/10 bg-[#000000] text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-light/30"
+                                    />
+                                </div>
+                            </div>
                         )}
                     </div>
                 </div>

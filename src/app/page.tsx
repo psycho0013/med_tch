@@ -5,6 +5,7 @@ import AppleBanner from "@/components/AppleBanner";
 import PCsSection from "@/components/PCsSection";
 import MonitorsSection from "@/components/MonitorsSection";
 import AccessoriesSection from "@/components/AccessoriesSection";
+import OffersSection from "@/components/OffersSection";
 import Footer from "@/components/Footer";
 import { getHeroContent } from "@/lib/data";
 
@@ -27,6 +28,9 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto px-8 w-full">
           <div className="h-px w-full bg-white/5" />
         </div>
+
+        {/* Offers Section */}
+        <OffersSection />
 
         {/* Product Sections */}
         <PCsSection />

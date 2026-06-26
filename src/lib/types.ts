@@ -17,6 +17,8 @@ export interface Product {
     type?: string;           // For monitors/accessories sub-type label
     is_offer: boolean;
     offer_discount?: string;
+    original_price_usd?: number;
+    original_price_iqd?: number;
     created_at?: string;
 }
 

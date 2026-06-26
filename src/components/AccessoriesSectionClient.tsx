@@ -66,7 +66,7 @@ export default function AccessoriesSectionClient({ products }: { products: Produ
                         return (
                             <motion.div key={product.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1, duration: 0.5 }} whileHover={{ y: -5 }}
                                 className="w-[85vw] sm:w-[280px] md:w-[300px] lg:w-[320px] max-w-[360px] snap-start shrink-0 bg-zinc-900/80 backdrop-blur-md rounded-3xl p-5 relative group overflow-hidden border border-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:border-white/30 transition-all flex flex-col h-full cursor-pointer">
-                                <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 items-end">
+                                <div className="absolute top-4 right-4 z-20 flex flex-col gap-2 items-end">
                                     <div className="px-2 py-1.5 rounded-md bg-white/10 backdrop-blur-sm text-white text-xs font-bold shadow-sm border border-white/20 flex items-center gap-1"><IconComponent className="w-3 h-3" />{product.tag}</div>
                                     {product.is_offer && (
                                         <div className="px-2 py-1.5 rounded-md bg-red-500 text-white text-xs font-bold shadow-md shadow-red-500/20">
