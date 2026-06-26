@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useCurrency } from "./CurrencyContext";
 import { useCart } from "@/lib/CartContext";
@@ -15,6 +15,15 @@ export default function PCsSectionClient({ products }: { products: Product[] }) 
     const { addToCart } = useCart();
     const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    const scroll = (direction: 'left' | 'right') => {
+        if (scrollContainerRef.current) {
+            const scrollAmount = 400;
+            scrollContainerRef.current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+        }
+    };
+
     if (products.length === 0) return null;
 
     return (
@@ -37,10 +46,17 @@ export default function PCsSectionClient({ products }: { products: Product[] }) 
                         </span>
                     </Link>
                 </div>
-                <div className="grid md:grid-cols-3 gap-8">
-                    {products.map((product, index) => (
+                <div className="relative group/carousel">
+                    <button onClick={() => scroll('right')} className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-zinc-900/90 hover:bg-white hover:text-black text-white rounded-full border border-white/20 backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.8)] transition-all translate-x-4 opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:translate-x-0 cursor-pointer">
+                        <ChevronRight className="w-6 h-6 ml-1" />
+                    </button>
+                    <button onClick={() => scroll('left')} className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-zinc-900/90 hover:bg-white hover:text-black text-white rounded-full border border-white/20 backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.8)] transition-all -translate-x-4 opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:translate-x-0 cursor-pointer">
+                        <ChevronLeft className="w-6 h-6 mr-1" />
+                    </button>
+                    <div ref={scrollContainerRef} className="flex overflow-x-auto gap-8 pb-6 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                        {products.map((product, index) => (
                         <motion.div key={product.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1, duration: 0.5 }} whileHover={{ y: -5 }}
-                            className="relative p-[1px] rounded-3xl bg-gradient-to-br from-white/20 to-white/5 overflow-hidden group hover:from-white/40 hover:to-white/10 transition-all duration-500 cursor-pointer shadow-sm hover:shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                            className="w-[85vw] sm:w-[300px] md:w-[360px] max-w-[400px] snap-start shrink-0 relative p-[1px] rounded-3xl bg-gradient-to-br from-white/20 to-white/5 overflow-hidden group hover:from-white/40 hover:to-white/10 transition-all duration-500 cursor-pointer shadow-sm hover:shadow-[0_0_30px_rgba(255,255,255,0.1)]">
                             <div className="bg-zinc-900/90 backdrop-blur-md rounded-[1.4rem] h-full p-6 flex flex-col relative z-10">
                                 <div className="absolute top-6 right-6 px-3 py-1 rounded-md bg-white/10 text-white text-xs font-bold border border-white/20">{product.tag}</div>
                                 {product.is_offer && (
@@ -106,6 +122,7 @@ export default function PCsSectionClient({ products }: { products: Product[] }) 
                             </div>
                         </motion.div>
                     ))}
+                    </div>
                 </div>
             </div>
             <SpecsModal isOpen={!!selectedProduct} onClose={() => setSelectedProduct(null)} product={selectedProduct} titleIcon={<Monitor className="w-6 h-6 text-white" />} />

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useCurrency } from "./CurrencyContext";
 import { useCart } from "@/lib/CartContext";
 import { useFavorites } from "@/lib/FavoritesContext";
-import { Tv, ChevronLeft, Star, MonitorPlay, Zap, RefreshCw, ShoppingCart, Heart } from "lucide-react";
+import { Tv, ChevronLeft, ChevronRight, Star, MonitorPlay, Zap, RefreshCw, ShoppingCart, Heart } from "lucide-react";
 import SpecsModal from "./SpecsModal";
 import type { Product } from "@/lib/types";
 import Link from "next/link";
@@ -15,6 +15,15 @@ export default function MonitorsSectionClient({ products }: { products: Product[
     const { addToCart } = useCart();
     const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    const scroll = (direction: 'left' | 'right') => {
+        if (scrollContainerRef.current) {
+            const scrollAmount = 400;
+            scrollContainerRef.current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+        }
+    };
+
     if (products.length === 0) return null;
 
     return (
@@ -33,10 +42,17 @@ export default function MonitorsSectionClient({ products }: { products: Product[
                         </span>
                     </Link>
                 </div>
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {products.map((product, index) => (
+                <div className="relative group/carousel">
+                    <button onClick={() => scroll('right')} className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-zinc-900/90 hover:bg-white hover:text-black text-white rounded-full border border-white/20 backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.8)] transition-all translate-x-4 opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:translate-x-0 cursor-pointer">
+                        <ChevronRight className="w-6 h-6 ml-1" />
+                    </button>
+                    <button onClick={() => scroll('left')} className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 items-center justify-center bg-zinc-900/90 hover:bg-white hover:text-black text-white rounded-full border border-white/20 backdrop-blur-md shadow-[0_0_30px_rgba(0,0,0,0.8)] transition-all -translate-x-4 opacity-0 group-hover/carousel:opacity-100 group-hover/carousel:translate-x-0 cursor-pointer">
+                        <ChevronLeft className="w-6 h-6 mr-1" />
+                    </button>
+                    <div ref={scrollContainerRef} className="flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                        {products.map((product, index) => (
                         <motion.div key={product.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.1, duration: 0.5 }} whileHover={{ y: -5 }}
-                            className="bg-zinc-900/80 backdrop-blur-md rounded-3xl p-5 relative group overflow-hidden border border-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:border-white/30 transition-all flex flex-col h-full cursor-pointer">
+                            className="w-[85vw] sm:w-[280px] md:w-[300px] lg:w-[320px] max-w-[360px] snap-start shrink-0 bg-zinc-900/80 backdrop-blur-md rounded-3xl p-5 relative group overflow-hidden border border-white/10 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:border-white/30 transition-all flex flex-col h-full cursor-pointer">
                             <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 items-end">
                                 <div className="px-2 py-1.5 rounded-md bg-white/10 backdrop-blur-sm text-white text-xs font-bold shadow-sm border border-white/20">{product.tag}</div>
                                 {product.is_offer && (
@@ -105,6 +121,7 @@ export default function MonitorsSectionClient({ products }: { products: Product[
                             </div>
                         </motion.div>
                     ))}
+                    </div>
                 </div>
             </div>
             <SpecsModal isOpen={!!selectedProduct} onClose={() => setSelectedProduct(null)} product={selectedProduct} titleIcon={<Tv className="w-6 h-6 text-white" />} />
