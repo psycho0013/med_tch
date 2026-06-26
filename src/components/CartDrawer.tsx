@@ -2,6 +2,7 @@
 
 import { useCart } from "@/lib/CartContext";
 import { useCurrency } from "./CurrencyContext";
+import { useToast } from "@/lib/ToastContext";
 import { X, Trash2, Plus, Minus, ShoppingCart, MessageCircle, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -10,8 +11,10 @@ import Link from "next/link";
 export default function CartDrawer() {
     const { cartItems, removeFromCart, updateQuantity, totalPrice, totalItems, clearCart, isCartOpen, setIsCartOpen } = useCart();
     const { formatPrice, formatIQD, exchangeRate } = useCurrency();
+    const toast = useToast();
     const [mounted, setMounted] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [phoneNumber, setPhoneNumber] = useState("");
     const [deliveryLocation, setDeliveryLocation] = useState<"none" | "inside" | "outside">("none");
     const [deliveryInsidePrice, setDeliveryInsidePrice] = useState(0);
     const [deliveryOutsidePrice, setDeliveryOutsidePrice] = useState(0);
@@ -44,9 +47,15 @@ export default function CartDrawer() {
     const deliveryPriceIQD = deliveryLocation === "inside" ? deliveryInsidePrice : deliveryLocation === "outside" ? deliveryOutsidePrice : 0;
 
     const handleCheckout = async () => {
+        if (!phoneNumber || phoneNumber.trim() === "") {
+            toast.error("يرجى إدخال رقم الموبايل لتأكيد الطلب.");
+            return;
+        }
+
         setIsSubmitting(true);
         
         let orderText = `🛒 *طلب جديد من (مركز الروان)*\n\n` +
+            `📞 *رقم الموبايل:* ${phoneNumber}\n\n` +
             cartItems.map(item => `▪️ ${item.product.name}\n   الكمية: ${item.quantity} | السعر: ${formatPrice(item.product.price_usd * item.quantity)}`).join("\n\n") +
             `\n\n💰 *الإجمالي للمنتجات:* ${formatPrice(totalPrice)}`;
 
@@ -69,14 +78,14 @@ export default function CartDrawer() {
             const data = await res.json();
             
             if (data.success) {
-                alert("تم إرسال طلبك بنجاح! سنتواصل معك قريباً.");
+                toast.success("تم إرسال طلبك بنجاح! سنتواصل معك قريباً.");
                 clearCart();
                 setIsCartOpen(false);
             } else {
-                alert("عذراً، حدث خطأ أثناء إرسال الطلب: " + (data.error || "خطأ غير معروف"));
+                toast.error("عذراً، حدث خطأ أثناء إرسال الطلب: " + (data.error || "خطأ غير معروف"));
             }
         } catch (error) {
-            alert("حدث خطأ في الاتصال بالسيرفر. يرجى المحاولة مرة أخرى.");
+            toast.error("حدث خطأ في الاتصال بالسيرفر. يرجى المحاولة مرة أخرى.");
         } finally {
             setIsSubmitting(false);
         }
@@ -212,6 +221,18 @@ export default function CartDrawer() {
                                         <div className="text-left text-brand-light">
                                             {formatIQD((totalPrice * (exchangeRate / 100)) + deliveryPriceIQD)}
                                         </div>
+                                    </div>
+                                    <div className="flex flex-col gap-2 border-t border-white/10 pt-3 mt-2">
+                                        <label className="text-zinc-400 text-sm font-bold">رقم الموبايل (مطلوب)</label>
+                                        <input 
+                                            type="tel"
+                                            required
+                                            value={phoneNumber}
+                                            onChange={(e) => setPhoneNumber(e.target.value)}
+                                            placeholder="مثال: 07800000000"
+                                            className="bg-[#111] border border-white/10 text-white rounded-lg px-3 py-2.5 focus:outline-none focus:border-white/30 focus:bg-white/5 transition-all w-full text-left"
+                                            dir="ltr"
+                                        />
                                     </div>
                                 </div>
                                 <button 

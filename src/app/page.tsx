@@ -8,6 +8,8 @@ import AccessoriesSection from "@/components/AccessoriesSection";
 import Footer from "@/components/Footer";
 import { getHeroContent } from "@/lib/data";
 
+import BrandsMarquee from "@/components/BrandsMarquee";
+
 export default async function Home() {
   const heroContent = await getHeroContent();
 
@@ -17,6 +19,9 @@ export default async function Home() {
 
       <main className="flex-1">
         <AppleBanner initialData={heroContent} />
+
+        {/* Brands Marquee */}
+        <BrandsMarquee />
 
         {/* Subtle separator */}
         <div className="max-w-7xl mx-auto px-8 w-full">

@@ -92,7 +92,7 @@ export default function FavoritesDrawer() {
                                                 {product.image_url ? (
                                                     <img src={product.image_url} alt={product.name} className="max-w-[80%] max-h-[80%] object-contain" />
                                                 ) : (
-                                                    <span className="text-2xl font-black text-white/30">{product.brand?.slice(0, 2) || 'TC'}</span>
+                                                    <span className="text-sm font-black text-white/30">{product.brand?.slice(0, 2) || 'Al-RwanPc'}</span>
                                                 )}
                                             </div>
                                             <div className="flex-1 min-w-0 flex flex-col">

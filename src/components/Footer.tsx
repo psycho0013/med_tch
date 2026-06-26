@@ -34,7 +34,7 @@ export default function Footer() {
                                 <img src={logoUrl} alt="Logo" className="h-12 object-contain brightness-0 invert" />
                             ) : (
                                 <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center border border-white/10">
-                                    <span className="text-white font-bold text-2xl">TC</span>
+                                    <span className="text-white font-bold text-2xl">Al-Rwan<span className="text-brand-light">Pc</span></span>
                                 </div>
                             )}
                             <span className="font-black text-3xl tracking-tight text-white">
@@ -42,7 +42,7 @@ export default function Footer() {
                             </span>
                         </div>
                         <p className="text-zinc-400 text-base leading-relaxed max-w-sm font-medium">
-                            المنصة الأولى في العراق لمقارنة الأجهزة التقنية وبناء تجميعات الـ PC. نساعدك في اتخاذ القرار الصحيح بناءً على أسعار السوق الحقيقية ومواصفات الأجهزة بشفافية تامة.
+                            المنصة الأولى في العراق لخدمات صيانة الأجهزة وبناء تجميعات الـ PC. نساعدك في الحفاظ على جهازك بأفضل أداء وتوفير أفضل القطع بشفافية تامة.
                         </p>
                     </div>
 
@@ -52,7 +52,7 @@ export default function Footer() {
                             <li><Link href="/#pc" className="hover:text-white hover:translate-x-1 inline-block transition-all">تجميعات PC</Link></li>
                             <li><Link href="/#monitors" className="hover:text-white hover:translate-x-1 inline-block transition-all">الشاشات الاحترافية</Link></li>
                             <li><Link href="/#accessories" className="hover:text-white hover:translate-x-1 inline-block transition-all">قطع وإكسسوارات</Link></li>
-                            <li><Link href="/compare" className="hover:text-white hover:translate-x-1 inline-block transition-all">المقارنة الذكية</Link></li>
+                            <li><Link href="/maintenance" className="hover:text-white hover:translate-x-1 inline-block transition-all">خدمات الصيانة</Link></li>
                         </ul>
                     </div>
 

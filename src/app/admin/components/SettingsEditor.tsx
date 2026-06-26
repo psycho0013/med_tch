@@ -247,7 +247,7 @@ export default function SettingsEditor() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-zinc-400 mb-1.5">WhatsApp (واتساب)</label>
+                                <label className="block text-sm font-bold text-zinc-400 mb-1.5">رقم/رابط واتساب لخدمة العملاء والدعم الفني</label>
                                 <input
                                     type="text" value={socialWhatsapp} onChange={(e) => setSocialWhatsapp(e.target.value)}
                                     placeholder="https://wa.me/..." dir="ltr"

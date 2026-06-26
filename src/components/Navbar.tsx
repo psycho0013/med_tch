@@ -2,15 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { default as NextLink } from "next/link";
-import { Menu, X, User, ShoppingCart, Search, Smartphone } from "lucide-react";
+import { Menu, X, User, ShoppingCart, Search, Smartphone, Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCurrency } from "./CurrencyContext";
 import { useCart } from "@/lib/CartContext";
+import { useFavorites } from "@/lib/FavoritesContext";
+import SearchModal from "./SearchModal";
 
 export default function Navbar() {
     const { currency, setCurrency } = useCurrency();
     const { totalItems, setIsCartOpen } = useCart();
+    const { totalFavorites, setIsFavoritesOpen } = useFavorites();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [logoUrl, setLogoUrl] = useState<string | null>(null);
     const [partnerName, setPartnerName] = useState("");
     const [partnerUrl, setPartnerUrl] = useState("");
@@ -44,10 +48,11 @@ export default function Navbar() {
         { name: "تجميعات PC", href: "/#pc" },
         { name: "شاشات", href: "/#monitors" },
         { name: "قطع وإكسسوارات", href: "/#accessories" },
-        { name: "المقارنة الذكية", href: "/compare" },
+        { name: "خدمات الصيانة", href: "/maintenance" },
     ];
 
     return (
+        <>
         <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-[#050505]/95 backdrop-blur-md border-b border-white/5' : 'bg-transparent border-transparent'}`}>
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className={`flex justify-between items-center transition-all duration-300 ${isScrolled ? 'h-20' : 'h-24'}`}>
@@ -57,7 +62,7 @@ export default function Navbar() {
                             <img src={logoUrl} alt="Logo" className="h-14 md:h-16 w-auto object-contain brightness-0 invert drop-shadow-lg" />
                         ) : (
                             <>
-                                <span className="font-black text-2xl tracking-tighter text-white leading-none">TC</span>
+                                <span className="font-black text-2xl tracking-tighter text-white leading-none">Al-Rwan<span className="text-brand-light">Pc</span></span>
                                 <span className="text-[10px] text-zinc-400 font-medium">مركز الروان</span>
                             </>
                         )}
@@ -93,8 +98,17 @@ export default function Navbar() {
                             {currency === "IQD" ? "IQD" : "USD"}
                         </button>
 
-                        <button className="text-zinc-300 hover:text-white transition-colors">
+                        <button onClick={() => setIsSearchOpen(true)} className="text-zinc-300 hover:text-white transition-colors">
                             <Search className="w-[22px] h-[22px]" strokeWidth={1.5} />
+                        </button>
+
+                        <button onClick={() => setIsFavoritesOpen(true)} className="relative text-zinc-300 hover:text-white transition-colors">
+                            <Heart className="w-[22px] h-[22px]" strokeWidth={1.5} />
+                            {totalFavorites > 0 && (
+                                <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md shadow-red-500/20">
+                                    {totalFavorites}
+                                </span>
+                            )}
                         </button>
 
                         <NextLink href="/admin/login" className="text-zinc-300 hover:text-white transition-colors">
@@ -113,6 +127,17 @@ export default function Navbar() {
 
                     {/* Mobile Menu Button */}
                     <div className="flex items-center gap-4 md:hidden">
+                        <button onClick={() => setIsSearchOpen(true)} className="text-zinc-300 hover:text-white transition-colors">
+                            <Search className="w-[22px] h-[22px]" strokeWidth={1.5} />
+                        </button>
+                        <button onClick={() => setIsFavoritesOpen(true)} className="relative text-zinc-300 hover:text-white transition-colors">
+                            <Heart className="w-[22px] h-[22px]" strokeWidth={1.5} />
+                            {totalFavorites > 0 && (
+                                <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md shadow-red-500/20">
+                                    {totalFavorites}
+                                </span>
+                            )}
+                        </button>
                         <button onClick={() => setIsCartOpen(true)} className="relative text-zinc-300">
                             <ShoppingCart className="w-[22px] h-[22px]" strokeWidth={1.5} />
                             {totalItems > 0 && (
@@ -184,6 +209,8 @@ export default function Navbar() {
             </AnimatePresence>
 
         </nav>
+            <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+        </>
     );
 }
 

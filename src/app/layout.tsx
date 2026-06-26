@@ -4,8 +4,10 @@ import "./globals.css";
 import { CurrencyProvider } from "@/components/CurrencyContext";
 import { CartProvider } from "@/lib/CartContext";
 import { FavoritesProvider } from "@/lib/FavoritesContext";
+import { ToastProvider } from "@/lib/ToastContext";
 import CartDrawer from "@/components/CartDrawer";
 import FavoritesDrawer from "@/components/FavoritesDrawer";
+import Preloader from "@/components/Preloader";
 
 const cairo = Cairo({
   variable: "--font-cairo",
@@ -29,9 +31,12 @@ export default function RootLayout({
         <CurrencyProvider>
           <CartProvider>
             <FavoritesProvider>
-              {children}
-              <CartDrawer />
-              <FavoritesDrawer />
+              <ToastProvider>
+                <Preloader />
+                {children}
+                <CartDrawer />
+                <FavoritesDrawer />
+              </ToastProvider>
             </FavoritesProvider>
           </CartProvider>
         </CurrencyProvider>

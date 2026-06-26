@@ -2,7 +2,9 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useCurrency } from "./CurrencyContext";
-import { X } from "lucide-react";
+import { useCart } from "@/lib/CartContext";
+import { useFavorites } from "@/lib/FavoritesContext";
+import { X, ShoppingCart, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -17,6 +19,8 @@ interface SpecsModalProps {
 
 export default function SpecsModal({ isOpen, onClose, product, titleIcon }: SpecsModalProps) {
     const { formatPrice } = useCurrency();
+    const { addToCart } = useCart();
+    const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
     const [mounted, setMounted] = useState(false);
     const [cachedProduct, setCachedProduct] = useState(product);
 
@@ -94,14 +98,35 @@ export default function SpecsModal({ isOpen, onClose, product, titleIcon }: Spec
                         <div className="p-6 border-t border-white/10 bg-[#050505] flex items-center justify-between gap-4">
                             <div>
                                 <div className="text-xs text-zinc-400 font-bold mb-1">السعر التقريبي</div>
-                                <div className="text-2xl font-black text-white">${priceUSD}</div>
+                                <div className="text-2xl font-black text-white">{formatPrice(priceUSD)}</div>
                             </div>
-                            <button
-                                onClick={onClose}
-                                className="px-6 py-3 rounded-xl bg-white text-black font-bold hover:bg-zinc-200 transition-colors shadow-lg shadow-white/10"
-                            >
-                                حسناً، فهمت
-                            </button>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => {
+                                        if (!displayProduct) return;
+                                        if (isFavorite(displayProduct.id)) {
+                                            removeFromFavorites(displayProduct.id);
+                                        } else {
+                                            addToFavorites(displayProduct);
+                                        }
+                                    }}
+                                    className="p-3.5 rounded-xl border border-white/10 text-zinc-400 hover:text-red-500 hover:border-red-500/50 hover:bg-red-500/10 transition-all"
+                                >
+                                    <Heart fill={displayProduct && isFavorite(displayProduct.id) ? "currentColor" : "none"} className={displayProduct && isFavorite(displayProduct.id) ? "text-red-500 w-5 h-5" : "w-5 h-5"} />
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        if (displayProduct) {
+                                            addToCart(displayProduct);
+                                            onClose();
+                                        }
+                                    }}
+                                    className="px-6 py-3 rounded-xl bg-white text-black font-bold hover:bg-zinc-200 transition-colors shadow-lg shadow-white/10 flex items-center gap-2"
+                                >
+                                    <ShoppingCart className="w-5 h-5" />
+                                    إضافة للسلة
+                                </button>
+                            </div>
                         </div>
                     </motion.div>
                 </div>
